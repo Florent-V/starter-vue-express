@@ -1,0 +1,6 @@
+server/node_modules/
+.idea/
+.vscode/
+package-lock.json
+.env
+server/public/uploads/*.png
