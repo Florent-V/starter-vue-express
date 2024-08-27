@@ -1,13 +1,10 @@
 import { defineStore } from 'pinia';
 import { client } from '@/utils/requestMaker.js';
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
-// //const baseUrl = "http://localhost:3002"
-// console.log('baseUrl:', baseUrl);
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: null,
-    user: null,
+    authenticated: false,
+    user: localStorage.getItem('user') || null,
   }),
   getters: {
     isAuthenticated: (state) => !!state.user,
@@ -16,16 +13,14 @@ export const useAuthStore = defineStore('auth', {
     async login(email, password) {
       try {
         console.log('Tentative de connexion...');
-        console.log('url:', `${baseUrl}/api/auth/signin`);
-        const test = await client.get(`/`);
-        console.log('test:', test);
         const data = await client.post(
           '/api/auth/signin',
           { email, password }
         );
         console.log('Connexion réussie:', data);
-        this.token = data.token;
-        this.user = data.username;        
+        localStorage.setItem('user', data.username);
+        this.user = data.username;
+        this.authenticated = true;
         return data;
       } catch (error) {
         console.error('Erreur lors de la connexion:', error);
@@ -33,18 +28,24 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     setToken(token) {
-      this.token = token;
+      // this.token = token;
       // Stockage sécurisé du token dans un cookie HttpOnly
       // document.cookie = `authToken=${token}; HttpOnly; Secure; SameSite=Strict`;
       // Configuration d'Axios pour inclure le token CSRF dans les en-têtes
       //axios.defaults.headers.common['X-CSRF-TOKEN'] = getCsrfToken();
     },
     async logout() {
-      await client.post(`${baseUrl}/api/auth/logout`, {});
-      this.token = null;
-      this.user = null;
-      // Supprimer le cookie
-      document.cookie = 'authToken=; Max-Age=0; path=/; HttpOnly; Secure; SameSite=Strict';
+      try {
+        console.log('Tentative de déconnexion...');
+        await client.post(`/api/auth/logout`, {});
+        console.log('Déconnexion réussie');
+        localStorage.removeItem('user');
+        this.user = null;
+        this.authenticated = false;
+        document.cookie = 'authToken=; Max-Age=0; path=/; HttpOnly; Secure; SameSite=Strict';
+      } catch (error) {
+        console.log('Erreur lors de la déconnexion:', error);
+      }
     },
     async checkAuth() {
       if (this.token) {
@@ -65,6 +66,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = null;
     },
   },
+  persist: true,
 });
 
 

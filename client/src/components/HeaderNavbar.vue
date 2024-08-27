@@ -14,6 +14,10 @@ const toggleTheme = () => {
   localStorage.setItem('theme', isDarkMode.value ? 'dark' : 'light');
 }
 
+const logout = () => {
+  userStore.logout();
+}
+
 onMounted(() => {
   initializeTheme(isDarkMode);
 });
@@ -33,9 +37,17 @@ onMounted(() => {
       <RouterLink to="/features">Features</RouterLink>
       <RouterLink to="/about">About</RouterLink>
 
-      <div>
+      <div class="flex items-center">
         <p v-if="user">Bienvenue, {{ user }}!</p>
-        <p v-else>Se connecter</p>
+        <button v-if="user" @click="logout" class="ml-4 text-red-600 hover:text-red-800">
+          <!-- Icône SVG de déconnexion -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h6a2 2 0 002-2v-1" />
+          </svg>
+        </button>
+        <RouterLink v-else to="/signin" class="text-blue-600 hover:text-blue-800">
+          Se connecter
+        </RouterLink>
       </div>
 
       <button @click="toggleTheme" class="relative inline-flex items-center justify-center w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full p-1 transition duration-300 focus:outline-none">
