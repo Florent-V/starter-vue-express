@@ -5,6 +5,7 @@ import cookieSession from 'cookie-session';
 
 import initDB from './database/init.js';
 import  { errorHandler, notFound, logError } from './middleware/errorMiddleware.js';
+import { send } from './middleware/sendMiddleware.js';
 
 import testRoutes from './routes/testRoutes.js';
 import authRoutes from './routes/authRoutes.js';
@@ -51,8 +52,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 // Tutorial Routes
 app.use('/api/product', productRoutes);
+// Send middleware
+app.use(send);
 
-//error middleware
+// Error handling middleware
 app.use(logError);
 app.use(notFound);
 app.use(errorHandler);

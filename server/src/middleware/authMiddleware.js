@@ -1,8 +1,6 @@
-import jwt from 'jsonwebtoken';
 import { Op } from 'sequelize';
-import config from '../config/config.js';
 import User from '../models/userModel.js';
-import  { checkAccess, authToken } from '../utils/security.js';
+import { checkAccess, authToken } from '../utils/security.js';
 import InvalidTokenError from '../error/invalidTokenError.js';
 import ForbiddenError from '../error/forbiddenError.js';
 import ConflictError from '../error/conflictError.js';
