@@ -3,7 +3,6 @@
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
 import { ref } from 'vue';
-import axios from 'axios';
 
 const router = useRouter();
 const authStore = useAuthStore();

@@ -27,6 +27,20 @@ export const useAuthStore = defineStore('auth', {
         throw error;
       }
     },
+    async signup(signupForm) {
+      try {
+        console.log('Tentative d\'inscription...');
+        const data = await client.post(
+          '/api/auth/signup',
+          signupForm
+        );
+        console.log('Inscription réussie:', data);
+        return data;
+      } catch (error) {
+        console.error('Erreur lors de l\'inscription:', error);
+        throw error;
+      }
+    },
     setToken(token) {
       // this.token = token;
       // Stockage sécurisé du token dans un cookie HttpOnly

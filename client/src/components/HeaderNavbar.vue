@@ -98,9 +98,16 @@ onMounted(() => {
             <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h6a2 2 0 002-2v-1" />
           </svg>
         </button>
-        <RouterLink v-else to="/signin" class="text-blue-600 hover:text-blue-800">
+        <div v-else>
+          <RouterLink to="/signin" class="text-blue-600 hover:text-blue-800">
           Se connecter
         </RouterLink>
+        /
+        <RouterLink to="/signup" class="text-blue-600 hover:text-blue-800">
+          S'inscrire
+        </RouterLink>
+
+        </div>
       </div>
 
       <button @click="toggleTheme" class="relative inline-flex items-center justify-center w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full p-1 transition duration-300 focus:outline-none">

@@ -1,3 +1,14 @@
+# TODO
+
+- Actualisation de la doc avec la partie front
+- Intégrer des messages d'erreurs plus explicites dans les formulaires
+- Ajouter des tests unitaires
+- Valider les formulaires côté front
+- Refresh Token
+- critère validation mot de passe
+- service toast message
+
+
 # CRUD REST API start with Nodejs + Express + MySQL + Sequelize + Docker + JWT Authentification
 ---
 

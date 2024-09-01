@@ -1,6 +1,10 @@
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore';
+
+const router = useRouter();
+const authStore = useAuthStore();
 
 const signupForm = ref({
   firstName: '',
@@ -19,9 +23,9 @@ const handleSignup = async () => {
   }
 
   try {
-    const response = await axios.post('/api/auth/signup', signupForm.value);
-    console.log('Signup successful:', response.data);
-    // Handle successful signup (e.g., redirect, show success message)
+    const data = await authStore.signup(signupForm.value);
+    console.log('Signup successful:', data);
+    router.push({ name: 'signin' });
   } catch (error) {
     console.error('Signup failed:', error.response?.data || error.message);
     // Handle signup error (e.g., show error message)
@@ -30,7 +34,7 @@ const handleSignup = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 dark:bg-gray-900">
+  <div class="bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 dark:bg-gray-900">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
       <h2 class="mt-6 text-center text-3xl leading-9 font-extrabold text-gray-900 dark:text-gray-100">
         Create a new account
