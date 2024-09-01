@@ -1,12 +1,12 @@
 import express from 'express';
 import { createProduct, getUserProducts, getAllProducts, getProductById, updateProduct, deleteProduct, authorizeProductAccess } from '../controllers/productController.js';
-import { authenticateToken, isAdmin } from '../middleware/authMiddleware.js';
+import { authenticateByCookieSession, isAdmin } from '../middleware/authMiddleware.js';
 import { validateProduct, validateUpdateProduct } from '../middleware/productMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
 
 const router = express.Router();
 
-router.use(authenticateToken);
+router.use(authenticateByCookieSession);
 router.post('/', upload.single('image'), validateProduct, createProduct);
 
 router.get('/', getUserProducts);

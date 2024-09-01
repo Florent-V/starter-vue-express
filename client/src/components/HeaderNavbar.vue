@@ -7,6 +7,15 @@ const userStore = useAuthStore();
 const user = computed(() => userStore.user);
 
 const isDarkMode = ref(document.documentElement.classList.contains('dark'));
+const isDropdownOpen = ref(false);
+
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+const closeDropdown = () => {
+  isDropdownOpen.value = false;
+};
 
 const toggleTheme = () => {
   document.documentElement.classList.toggle('dark');
@@ -34,8 +43,52 @@ onMounted(() => {
 
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/product">Product</RouterLink>
-      <RouterLink to="/features">Features</RouterLink>
       <RouterLink to="/about">About</RouterLink>
+
+     <!-- Dropdown Demo -->
+     <div class="relative">
+        <button 
+          @click="toggleDropdown" 
+          @blur="closeDropdown" 
+          class="flex items-center text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none"
+        >
+          Demo
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-4 w-4 ml-1 transition-transform duration-200" 
+            :class="{ 'rotate-180': isDropdownOpen }"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div 
+          v-show="isDropdownOpen" 
+          class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 transition-opacity duration-300"
+          @mousedown.prevent
+        >
+          <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+            <RouterLink 
+              to="/demo-product" 
+              class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600" 
+              role="menuitem"
+              @click="closeDropdown"
+            >
+              Demo Product
+            </RouterLink>
+            <RouterLink 
+              to="/demo-features" 
+              class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600" 
+              role="menuitem"
+              @click="closeDropdown"
+            >
+              Demo Features
+            </RouterLink>
+          </div>
+        </div>
+      </div>
 
       <div class="flex items-center">
         <p v-if="user">Bienvenue, {{ user }}!</p>
@@ -72,5 +125,12 @@ button span {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.group:hover .group-hover\:visible {
+  visibility: visible;
+}
+.group:hover .group-hover\:opacity-100 {
+  opacity: 1;
 }
 </style>

@@ -19,7 +19,7 @@ const port = process.env.NODE_API_DOCKER_PORT || 3000;
 
 const corsOptions = {
   origin: process.env.CLIENT_ORIGIN || "http://localhost:8080",
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Origin", "Content-Type", "Accept"],
   credentials: true // Autorise l'envoi de cookies et informations d'authentification
 };
@@ -43,7 +43,7 @@ app.use(
 );
 
 // serve the `backend/public` folder for public resources
-app.use(express.static('public/uploads'));
+app.use(express.static('public'));
 // Test Routes
 app.use('', testRoutes);
 // Auth Routes
@@ -63,7 +63,7 @@ app.use(errorHandler);
 app.listen(port, async () => {
   console.log(`Serveur démarré sur le port ${port}`);
   try {
-    await initDB('force');
+    await initDB('alter');
     console.log(`Server is running on port ${port}`);
   } catch (error) {
     console.error('Unable to connect to the database:', error);

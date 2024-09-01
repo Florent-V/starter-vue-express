@@ -1,17 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '@/views/AboutView.vue'
-import ProductView from '@/views/ProductView.vue'
+import DemoProductView from '@/views/Demo/DemoProductView.vue'
 import HelloView from '@/views/HelloView.vue'
-import FeaturedCardsView from '@/views/FeaturedCardsView.vue'
+import FeaturedCardsView from '@/views/Demo/DemoFeaturedCardsView.vue'
 import NotFound from '@/views/NotFound.vue'
 import NProgress from '@/plugins/nprogress'
-import ToDoListView from '@/views/ToDoListView.vue'
-import SignInView from '@/views/SignInView.vue'
-import SignUpView from '@/views/SignUpView.vue'
+import ToDoListView from '@/views/ToDoList/ToDoListView.vue'
+import SignInView from '@/views/Auth/SignInView.vue'
+import SignUpView from '@/views/Auth/SignUpView.vue'
+import ProductView from '@/views/Product/ProductView.vue'
+import ProductDetailView from '@/views/Product/ProductDetailView.vue'
+import ProductFormView from '@/views/Product/ProductFormView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
@@ -41,13 +44,58 @@ const router = createRouter({
       component: SignUpView
     },
     {
-      path: '/product',
-      name: 'product',
+      path: '/demo-product',
+      name: 'demo-product',
+      meta: {
+        title: 'Demo Product',
+        description: 'This is the demo product page'
+      },
+      component: DemoProductView
+    },
+    {
+      path: '/demo-features',
+      name: 'demo-features',
+      meta: {
+        title: 'Demo Features',
+        description: 'This is the Demo Features page'
+      },
+      component: FeaturedCardsView
+    },
+    {
+      path: '/product/new',
+      name: 'productNew',
       meta: {
         title: 'Product',
         description: 'This is the product page'
       },
+      component: ProductFormView
+    },
+    {
+      path: '/product',
+      name: 'product',
+      meta: {
+        title: 'ProductListView',
+        description: 'This is the product page'
+      },
       component: ProductView
+    },
+    {
+      path: '/product/:id',
+      name: 'productdetail',
+      meta: {
+        title: 'ProductDetailView',
+        description: 'This is the product page'
+      },
+      component: ProductDetailView
+    },
+    {
+      path: '/product/:id/edit',
+      name: 'productedit',
+      meta: {
+        title: 'ProductDetailView',
+        description: 'This is the product page'
+      },
+      component: ProductFormView
     },
     {
       path: '/todolist',
@@ -57,15 +105,6 @@ const router = createRouter({
         description: 'This is the ToDoList page'
       },
       component: ToDoListView
-    },
-    {
-      path: '/features',
-      name: 'features',
-      meta: {
-        title: 'Features',
-        description: 'This is the Features page'
-      },
-      component: FeaturedCardsView
     },
     {
       path: '/hello/:name',

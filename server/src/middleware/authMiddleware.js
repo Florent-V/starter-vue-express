@@ -26,12 +26,20 @@ export const authenticateByCookieSession = (req, res, next) => {
 
   try {
     const verified = authToken(token);
+    console.log('verified:', verified);
     req.user = verified;
     next();
-
   } catch (error) {
     return next({ ...error, stack: error.stack, status: 401 });
   }
+};
+
+export const checkAuth = (req, res, next) => {
+  res.data = {
+    user: req.user,
+    isAuthenticated: true
+  }
+  next();
 };
 
 export const isAdmin = async (req, res, next) => {

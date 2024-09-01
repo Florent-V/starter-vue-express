@@ -7,6 +7,7 @@ export const productSchema = Joi.object({
   available: Joi.boolean().required(),
   quantity: Joi.number().min(1).required(),
   releaseDate: Joi.date().required(),
+  image: Joi.string(),
 });
 
 export const updateProductSchema = Joi.object({
@@ -16,4 +17,5 @@ export const updateProductSchema = Joi.object({
   available: Joi.boolean(),
   quantity: Joi.number().min(1),
   releaseDate: Joi.date(),
+  image: Joi.string(),
 });

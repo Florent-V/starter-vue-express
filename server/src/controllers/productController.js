@@ -6,7 +6,7 @@ import ForbiddenError from '../error/forbiddenError.js';
 export const createProduct = async (req, res, next) => {
   try {
     const userId = req.user.id; //
-    req.body.image = req.file ? req.file.filename : "default.jpg";
+    req.body.image = req.file ? req.file.filename : 'default-product-image.webp';
     req.body.userId = userId;
     const product = await Product.create(req.body);
     res.status(201).json(product);

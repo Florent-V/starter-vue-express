@@ -48,16 +48,15 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async checkAuth() {
-      if (this.token) {
         try {
-          // Vérifier l'authentification côté serveur
-          // Le cookie sera automatiquement envoyé avec la requête
-          const response = await client.get('/auth/check');
-          this.isAuthenticated = response.data.isAuthenticated;
+          console.log('Vérification de l\'authentification...');
+          const data = await client.get('/api/auth/check');
+          this.authenticated = data.isAuthenticated;
+          this.user = data.user.username;
         } catch (error) {
+          console.error('Erreur lors de la vérification de l\'authentification:', error);
           this.logout();
         }
-      }
     },
     setUser(userData) {
       this.user = userData;

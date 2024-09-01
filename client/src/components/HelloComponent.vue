@@ -12,7 +12,7 @@ function go() {
 
 <template>
   <div class="flex items-center justify-center">
-    <div class="bg-gray-800 dark:bg-gray-700 text-white p-6 rounded-lg shadow-md w-64 text-center">
+    <div class="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white p-6 rounded-lg shadow-md w-64 text-center">
       <input
         v-model="name"
         type="text"
