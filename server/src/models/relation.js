@@ -1,31 +1,57 @@
 import models from './index.js';
 
-const { role, user, product, refreshToken } = models;
+console.log('Liste des modèles', models);
 
 export const defineAssociations = () => {
-  role.belongsToMany(user, {
+  models.role.belongsToMany(models.user, {
     through: 'user_role',
     foreignKey: 'roleId',
     otherKey: 'userId'
   });
-  user.belongsToMany(role, {
+  models.user.belongsToMany(models.role, {
     through: 'user_role',
     foreignKey: 'userId',
     otherKey: 'roleId'
   });
-  product.belongsTo(user, {
+  models.product.belongsTo(models.user, {
     foreignKey: 'userId',
     onDelete: 'CASCADE'
   });
-  user.hasMany(product, {
+  models.user.hasMany(models.product, {
     foreignKey: 'userId'
   });
-  user.hasOne(refreshToken, {
+  models.user.hasOne(models.refreshToken, {
     foreignKey: 'userId',
     onDelete: 'CASCADE'
   });
-  refreshToken.belongsTo(user, {
+  models.refreshToken.belongsTo(models.user, {
     foreignKey: 'userId',
     onDelete: 'CASCADE'
   });
+  models.user.hasMany(models.toDoList, {
+    foreignKey: 'userId',
+    onDelete: 'CASCADE'
+  });
+  models.toDoList.belongsTo(models.user, {
+    foreignKey: 'userId',
+    onDelete: 'CASCADE'
+  });
+  models.toDoList.hasMany(models.toDoItem, {
+    foreignKey: 'toDoListId',
+    onDelete: 'CASCADE'
+  });
+  models.toDoItem.belongsTo(models.toDoList, {
+    foreignKey: 'toDoListId',
+    onDelete: 'CASCADE'
+  });
+  models.label.hasMany(models.toDoItem, {
+    foreignKey: 'labelId',
+    onDelete: 'CASCADE'
+  });
+  models.toDoItem.belongsTo(models.label, {
+    foreignKey: 'labelId',
+    onDelete: 'CASCADE'
+  });
+
+
 };
