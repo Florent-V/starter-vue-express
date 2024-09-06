@@ -38,6 +38,12 @@
 - Copy the content of the private and public key in the .env file :  
 `cat private_key.pem`  
 `cat public_key.pem` 
+3. To generate a secret key for the JWT token, you can use the following command :
+```bash
+openssl rand -base64 64
+# or
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'));"
+```
 
 ## How To Setup
 

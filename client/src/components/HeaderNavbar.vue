@@ -29,6 +29,7 @@ const logout = () => {
 
 onMounted(() => {
   initializeTheme(isDarkMode);
+  console.log('User:', user.value);
 });
 
 </script>
@@ -44,6 +45,7 @@ onMounted(() => {
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/product">Product</RouterLink>
       <RouterLink to="/about">About</RouterLink>
+      <router-link to="/refresh">Refresh</router-link>
 
      <!-- Dropdown Demo -->
      <div class="relative">

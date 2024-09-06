@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useAuthStore } from "@/stores/authStore";
+import router from '../router';
 
 console.log('VITE_API_BASE_URL', import.meta.env.VITE_API_BASE_URL)
 export const apiClient = axios.create({
@@ -12,12 +13,35 @@ export const apiClient = axios.create({
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response && error.response.status === 401) {
+
+    const originalConfig  = error.config;
+    console.error('####Interceptor');
+    
+    if (error.response && error.response.status === 401 && !originalConfig._retry) {
+      console.error('Interceptor - 401:', error.response.data.message);
+      originalConfig._retry = true; // Prevent infinite loop
       const authStore = useAuthStore();
-      await authStore.logout();
-      // Rediriger vers la page de connexion si nécessaire
-      // router.push('/login');
+      
+       // Si c'est une erreur de rafraîchissement, déconnectez l'utilisateur immédiatement
+      if (error.response.data.name === 'RefreshTokenError') {
+        console.error(' Interceptor - RefreshTokenError');
+        await authStore.logout();
+        router.push('/signin');
+        return Promise.reject(error);
+      }
+
+      try {
+        console.log('Interceptor - Tentative de rafraîchissement du token...');
+        const data = await authStore.refreshToken();
+        console.log('Interceptor - Token rafraîchi:', data);
+        return apiClient(originalConfig); // Retry the original request
+      } catch (_error) {
+        console.error('Interceptor - Error in try/catch');
+        router.push('/signin');
+        return Promise.reject(_error);
+      }
     }
+    console.error('Interceptor - Out');
     return Promise.reject(error);
   }
 );
@@ -25,10 +49,17 @@ apiClient.interceptors.response.use(
 const request = async (requestPromise) => {
   try {
     const response = await requestPromise;
-    console.log('Request Maker API response:', response);
-    return response.data;
+    console.log('requestMaker() - Success on :', response.config.url);
+    console.log('requestMaker() - Data:', response.data);
+    return response.data ?? response;
   } catch (error) {
-    console.error(`Erreur lors de la requête:`, error);
+    console.error('Request Maker Erreur lors de la requête:', {
+      url: error.config.url,
+      status: error.response?.status,
+      name: error.response?.data?.name,
+      message: error.response?.data?.message,
+      // stack: error.response?.data?.stack,
+    });
     throw error;
   }
 };

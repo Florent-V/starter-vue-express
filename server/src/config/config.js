@@ -16,7 +16,12 @@ export default {
       idle: 10000
     }
   },
-  jwtSecret: process.env.JWT_SECRET,
+  jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
   jwtPrivateKey: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
-  jwtPublicKey: process.env.PUBLIC_KEY.replace(/\\n/g, '\n')
+  jwtPublicKey: process.env.PUBLIC_KEY.replace(/\\n/g, '\n'),
+  cookieSecret: process.env.COOKIE_SECRET,
+  accessTokenLifetime: process.env.ACCESS_TOKEN_LIFETIME,
+  refreshTokenLifetime: process.env.REFRESH_TOKEN_LIFETIME,
+  sessionCookieLifetime: process.env.SESSION_COOKIE_LIFETIME,
+  refreshTokenCookieLifetime: process.env.REFRESH_TOKEN_COOKIE_LIFETIME,
 };

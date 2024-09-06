@@ -12,6 +12,7 @@ import SignUpView from '@/views/Auth/SignUpView.vue'
 import ProductView from '@/views/Product/ProductView.vue'
 import ProductDetailView from '@/views/Product/ProductDetailView.vue'
 import ProductFormView from '@/views/Product/ProductFormView.vue'
+import RefreshTestView from '@/views/RefreshTestView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -24,6 +25,15 @@ const router = createRouter({
         description: 'This is the home page'
       },
       component: HomeView
+    },
+    {
+      path: '/refresh',
+      name: 'refresh',
+      meta: {
+        title: 'Refresh',
+        description: 'Refresh Test Page'
+      },
+      component: RefreshTestView
     },
     {
       path: '/signin',

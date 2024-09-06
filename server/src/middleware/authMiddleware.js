@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import User from '../models/userModel.js';
-import { checkAccess, authToken } from '../utils/security.js';
+import { checkAccess } from '../services/authService.js';
+import { authToken } from '../services/tokenService.js';
 import InvalidTokenError from '../error/invalidTokenError.js';
 import ForbiddenError from '../error/forbiddenError.js';
 import ConflictError from '../error/conflictError.js';
@@ -19,6 +20,8 @@ export const authenticateToken = (req, res, next) => {
 };
 
 export const authenticateByCookieSession = (req, res, next) => {
+  console.log('req.cookies:', req.cookies);
+  console.log('req.signedCookies:', req.signedCookies);
   console.log('req.session:', req.session.token);
   const token = req.session.token;
 
@@ -36,7 +39,7 @@ export const authenticateByCookieSession = (req, res, next) => {
 
 export const checkAuth = (req, res, next) => {
   res.data = {
-    user: req.user,
+    username: req.user.username,
     isAuthenticated: true
   }
   next();
