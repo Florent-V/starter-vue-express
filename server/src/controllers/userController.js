@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import User from "../models/userModel.js";
 import Role from "../models/roleModel.js";
-import { getAuthorities } from '../utils/security.js';
+import { getAuthorities } from '../services/authService.js';
 
 // Récupération de tous les Utilisateurs
 export const getAllUsers = async (req, res, next) => {

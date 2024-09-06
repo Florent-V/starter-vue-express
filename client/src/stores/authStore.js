@@ -4,7 +4,7 @@ import { client } from '@/utils/requestMaker.js';
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     authenticated: false,
-    user: localStorage.getItem('user') || null,
+    user: localStorage.getItem('user'),
   }),
   getters: {
     isAuthenticated: (state) => !!state.user,
@@ -41,36 +41,41 @@ export const useAuthStore = defineStore('auth', {
         throw error;
       }
     },
-    setToken(token) {
-      // this.token = token;
-      // Stockage sécurisé du token dans un cookie HttpOnly
-      // document.cookie = `authToken=${token}; HttpOnly; Secure; SameSite=Strict`;
-      // Configuration d'Axios pour inclure le token CSRF dans les en-têtes
-      //axios.defaults.headers.common['X-CSRF-TOKEN'] = getCsrfToken();
-    },
     async logout() {
       try {
-        console.log('Tentative de déconnexion...');
-        await client.post(`/api/auth/logout`, {});
-        console.log('Déconnexion réussie');
+        console.log('logout() - Tentative de déconnexion...');
+        await client.post('/api/auth/logout', {});
+        console.log('logout() - Déconnexion réussie');
         localStorage.removeItem('user');
         this.user = null;
         this.authenticated = false;
-        document.cookie = 'authToken=; Max-Age=0; path=/; HttpOnly; Secure; SameSite=Strict';
       } catch (error) {
-        console.log('Erreur lors de la déconnexion:', error);
+        console.log('logout() - Erreur lors de la déconnexion:', error);
+      }
+    },
+    async refreshToken() {
+      try {
+        console.log('refreshToken() - Tentative de rafraîchissement du token...');
+        const data = await client.post('/api/auth/refresh-token', {});
+        console.log('refreshToken() - Token rafraîchi:', data);
+      } catch (error) {
+        console.error('refreshToken() - Erreur lors du rafraîchissement du token:');
+        throw error;
       }
     },
     async checkAuth() {
-        try {
-          console.log('Vérification de l\'authentification...');
-          const data = await client.get('/api/auth/check');
+      try {
+        console.log('checkAuth() - Vérification de l\'authentification...');
+        const data = await client.get('/api/auth/check');
+        console.log('checkAuth() - Authentification vérifiée:', data);
+        if (data) {
           this.authenticated = data.isAuthenticated;
-          this.user = data.user.username;
-        } catch (error) {
-          console.error('Erreur lors de la vérification de l\'authentification:', error);
-          this.logout();
+          this.user = data.username;
         }
+      } catch (error) {
+        console.error('checkAuth() - Erreur lors de la vérification de l\'authentification:');
+        throw error;
+      }
     },
     setUser(userData) {
       this.user = userData;

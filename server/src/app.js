@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieSession from 'cookie-session';
+import cookieParser from 'cookie-parser';
 
 import initDB from './database/init.js';
 import  { errorHandler, notFound, logError } from './middleware/errorMiddleware.js';
@@ -30,6 +31,8 @@ app.use(cors(corsOptions));
 app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+// Dans ton middleware d'application
+app.use(cookieParser(process.env.COOKIE_SECRET));
 // Set up cookie session
 app.use(
   cookieSession({
@@ -63,7 +66,7 @@ app.use(errorHandler);
 app.listen(port, async () => {
   console.log(`Serveur démarré sur le port ${port}`);
   try {
-    await initDB('alter');
+    await initDB('force');
     console.log(`Server is running on port ${port}`);
   } catch (error) {
     console.error('Unable to connect to the database:', error);

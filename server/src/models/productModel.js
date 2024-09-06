@@ -1,4 +1,3 @@
-// product.model.js
 import { DataTypes } from 'sequelize';
 import sequelize from '../database/connect.js';
 

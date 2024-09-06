@@ -13,9 +13,16 @@ app.use(createPinia())
 app.use(router)
 
 const authStore = useAuthStore();
-// Vérifiez l'authentification avant de monter l'application
-authStore.checkAuth().then(() => {
-  app.mount('#app');
-});
 
-//app.mount('#app')
+// Vérifiez l'authentification avant de monter l'application
+console.log('Init App - Vérification initiale de l\'authentification...');
+authStore.checkAuth()
+  .then(() => {
+    console.log('Init App - checkAuth OK');
+    app.mount('#app');
+  })
+  .catch((error) => {
+    console.log('Init App - checkAuth KO - non authentifié');
+    app.mount('#app');
+  });
+
