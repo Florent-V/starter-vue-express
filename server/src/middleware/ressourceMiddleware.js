@@ -3,14 +3,18 @@ import ForbiddenError from '../error/forbiddenError.js';
 import BadRequestError from '../error/badRequestError.js';
 
 export const getUserRessources = async (req, res, next) => {
-  const userId = req.user.id;
+  try {
+    const userId = req.user.id;
 
-  const resources = await req.entity.findAll({ where: { userId } });
-
-  if (!resources) throw new NotFoundError('No record found');
-
-  res.data = resources;
-  next();
+    const resources = await req.entity.findAll({ where: { userId } });
+  
+    if (!resources) throw new NotFoundError('No record found');
+  
+    res.data = resources;
+    next();
+  } catch (error) {
+    return next(error);
+  }
 };
 
 export const getUserRessourceById = async (req, res, next) => {
@@ -30,15 +34,23 @@ export const getUserRessourceById = async (req, res, next) => {
 };
 
 export const authorizeRessourceAccess = async (req, res, next) => {
-  if (req.data.userId !== req.user.id) {
-    throw new ForbiddenError('Access denied: You do not have permission to access this ressource');
+  try {
+    if (req.data.userId !== req.user.id) {
+      throw new ForbiddenError('Access denied: You do not have permission to access this ressource');
+    }
+    res.data = req.data;
+    next();
+  } catch (error) {
+    return next(error);
   }
-  res.data = req.data;
-  next();
 };
 
 export const validator = (req, res, next) => {
-  const { error } = req.schema.validate(req.body);
-  if (error) throw new BadRequestError(error.details[0].message);
-  next();
+  try {
+    const { error } = req.schema.validate(req.body);
+    if (error) throw new BadRequestError(error.details[0].message);
+    next();
+  } catch (error) {
+    return next(error);
+  }
 };

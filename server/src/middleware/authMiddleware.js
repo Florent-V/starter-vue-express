@@ -8,10 +8,10 @@ import ConflictError from '../error/conflictError.js';
 
 
 export const authenticateToken = (req, res, next) => {
-  const token = req.header('Authorization')?.split(' ')[1];
-  if (!token) throw new InvalidTokenError('Access Denied: No token provided');
-
   try {
+    const token = req.header('Authorization')?.split(' ')[1];
+    if (!token) throw new InvalidTokenError('Access Denied: No token provided');
+    
     const verified = authToken(token);
     req.user = verified;
     next();

@@ -3,15 +3,19 @@ import { toDoListSchema, updateToDoListSchema } from "../joiSchema/toDoListSchem
 import ForbiddenError from '../error/forbiddenError.js';
 
 export const authorizeToDoListAccess = async (req, res, next) => {
-  const { id } = req.params;
-  const userId = req.user.id;
-
-  const todolist = await ToDoList.findOne({ where: { id, userId } });
-
-  if (!todolist) throw new ForbiddenError('Access denied: You do not have permission to access this product');
-
-  req.todolist = todolist;
-  next();
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+  
+    const todolist = await ToDoList.findOne({ where: { id, userId } });
+  
+    if (!todolist) throw new ForbiddenError('Access denied: You do not have permission to access this product');
+  
+    req.todolist = todolist;
+    next();
+  } catch (error) {
+    return next(error);
+  }
 };
 
 export const setEntity = async (req, res, next) => {
