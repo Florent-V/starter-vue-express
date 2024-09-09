@@ -1,19 +1,22 @@
 import express from 'express';
-import { createProduct, getUserProducts, getAllProducts, getProductById, updateProduct, deleteProduct, authorizeProductAccess } from '../controllers/productController.js';
+import { createProduct, getAllProducts, getProductById, updateProduct, deleteProduct } from '../controllers/productController.js';
 import { authenticateByCookieSession, isAdmin } from '../middleware/authMiddleware.js';
-import { validateProduct, validateUpdateProduct } from '../middleware/productMiddleware.js';
+import { setEntity, setCreateValidator, setUpdateValidator } from '../middleware/productMiddleware.js';
+import { getUserRessources, getUserRessourceById, authorizeRessourceAccess, validator } from '../middleware/ressourceMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
 
 const router = express.Router();
 
 router.use(authenticateByCookieSession);
-router.post('/', upload.single('image'), validateProduct, createProduct);
+router.use(setEntity);
 
-router.get('/', getUserProducts);
+router.post('/', upload.single('image'), setCreateValidator, validator, createProduct);
+
+router.get('/', getUserRessources);
 router.get('/all', isAdmin, getAllProducts);
-router.get('/:id', getProductById, authorizeProductAccess);
+router.get('/:id', getUserRessourceById);
 
-router.patch('/:id', getProductById, authorizeProductAccess, upload.single('image'), validateUpdateProduct, updateProduct);
-router.delete('/:id', getProductById, authorizeProductAccess, deleteProduct);
+router.patch('/:id', getProductById, authorizeRessourceAccess, upload.single('image'), setUpdateValidator, validator, updateProduct);
+router.delete('/:id', getProductById, authorizeRessourceAccess, deleteProduct);
 
 export default router;

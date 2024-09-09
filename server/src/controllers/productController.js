@@ -1,6 +1,5 @@
 import Product from '../models/productModel.js';
 import NotFoundError from '../error/notFoundError.js';
-import ForbiddenError from '../error/forbiddenError.js';
 
 // Création d'un Product
 export const createProduct = async (req, res, next) => {
@@ -10,18 +9,6 @@ export const createProduct = async (req, res, next) => {
     req.body.userId = userId;
     const product = await Product.create(req.body);
     res.status(201).json(product);
-  } catch (error) {
-    return next(error);
-  }
-};
-
-// Récupérer les produits de l'utilisateur connecté
-export const getUserProducts = async (req, res) => {
-  const userId = req.user.id;
-
-  try {
-    const products = await Product.findAll({ where: { userId } });
-    res.status(200).json(products);
   } catch (error) {
     return next(error);
   }
@@ -43,7 +30,7 @@ export const getProductById = async (req, res, next) => {
     const product = await Product.findByPk(req.params.id);
     if (!product) throw new NotFoundError('Product Not Found');
 
-    req.product = product;
+    req.data = product;
     next();
   } catch (error) {
     return next(error);
@@ -77,19 +64,6 @@ export const deleteProduct = async (req, res, next) => {
     if (!deleted) throw new NotFoundError('Product Not Found');
 
     res.status(204).json();
-  } catch (error) {
-    return next(error);
-  }
-};
-
-// Middleware pour vérifier l'accès à un produit
-export const authorizeProductAccess = async (req, res, next) => {
-  try {
-    if (req.product.userId !== req.user.id) {
-      throw new ForbiddenError('Access denied: You do not have permission to access this product');
-    }
-    res.data = req.product;
-    next();
   } catch (error) {
     return next(error);
   }

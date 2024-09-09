@@ -12,6 +12,7 @@ import testRoutes from './routes/testRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import toDoListRoutes from './routes/toDoListRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -55,6 +56,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 // Tutorial Routes
 app.use('/api/product', productRoutes);
+// ToDoList && TodoItem Routes
+app.use('/api/todolist', toDoListRoutes);
 // Send middleware
 app.use(send);
 
@@ -66,7 +69,7 @@ app.use(errorHandler);
 app.listen(port, async () => {
   console.log(`Serveur démarré sur le port ${port}`);
   try {
-    await initDB('force');
+    await initDB('alter');
     console.log(`Server is running on port ${port}`);
   } catch (error) {
     console.error('Unable to connect to the database:', error);

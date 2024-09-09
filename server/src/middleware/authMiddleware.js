@@ -6,6 +6,7 @@ import InvalidTokenError from '../error/invalidTokenError.js';
 import ForbiddenError from '../error/forbiddenError.js';
 import ConflictError from '../error/conflictError.js';
 
+
 export const authenticateToken = (req, res, next) => {
   const token = req.header('Authorization')?.split(' ')[1];
   if (!token) throw new InvalidTokenError('Access Denied: No token provided');
@@ -23,11 +24,12 @@ export const authenticateByCookieSession = (req, res, next) => {
   console.log('req.cookies:', req.cookies);
   console.log('req.signedCookies:', req.signedCookies);
   console.log('req.session:', req.session.token);
-  const token = req.session.token;
-
-  if (!token) throw new InvalidTokenError('Access Denied: No token provided');
-
   try {
+    const token = req.session.token || req.header('Authorization')?.split(' ')[1];
+
+    if (!token) throw new InvalidTokenError('Access Denied: No token provided');
+
+  
     const verified = authToken(token);
     console.log('verified:', verified);
     req.user = verified;
