@@ -7,8 +7,10 @@ export const createProduct = async (req, res, next) => {
     const userId = req.user.id; //
     req.body.image = req.file ? req.file.filename : 'default-product-image.webp';
     req.body.userId = userId;
-    const product = await Product.create(req.body);
-    res.status(201).json(product);
+
+    res.statusCode = 201;
+    res.data.product = await Product.create(req.body);
+    next();
   } catch (error) {
     return next(error);
   }
@@ -17,8 +19,7 @@ export const createProduct = async (req, res, next) => {
 // Récupération de tous les Products
 export const getAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.findAll();
-    res.status(200).json(products);
+    res.data.products = await Product.findAll();
   } catch (error) {
     return next(error);
   }
@@ -47,8 +48,8 @@ export const updateProduct = async (req, res, next) => {
 
     if (!updated) throw new NotFoundError('Product Not Found');
 
-    const updatedProduct = await Product.findByPk(req.params.id);
-    res.status(200).json(updatedProduct);
+    res.data.product = await Product.findByPk(req.params.id);
+    next();
   } catch (error) {
     return next(error);
   }

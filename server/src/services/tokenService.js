@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 import RefreshTokenError from '../error/refreshTokenError.js';
 
 export function createAuthTokens(user) {
-  console.log('createAuthTokens() - user:', user);
   const token = generateToken(user.id, user.username);
   const refreshToken = generateRefreshToken(user.id, user.username);
   return { token, refreshToken };

@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 
 import initDB from './database/init.js';
 import  { errorHandler, notFound, logError } from './middleware/errorMiddleware.js';
-import { send } from './middleware/sendMiddleware.js';
+import { init, send } from './middleware/inOutMiddleware.js';
 
 import testRoutes from './routes/testRoutes.js';
 import authRoutes from './routes/authRoutes.js';
@@ -49,6 +49,7 @@ app.use(
 // serve the `backend/public` folder for public resources
 app.use(express.static('public'));
 // Test Routes
+app.use(init);
 app.use('', testRoutes);
 // Auth Routes
 app.use('/api/auth', authRoutes);

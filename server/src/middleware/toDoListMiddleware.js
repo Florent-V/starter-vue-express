@@ -18,17 +18,17 @@ export const authorizeToDoListAccess = async (req, res, next) => {
   }
 };
 
-export const setEntity = async (req, res, next) => {
+export const setEntity = (req, res, next) => {
   req.entity = ToDoList;
   next();
 }
 
-export const setCreateValidator = async (req, res, next) => {
+export const setCreateValidator = (req, res, next) => {
   req.schema = toDoListSchema;
   next();
 }
 
-export const setUpdateValidator = async (req, res, next) => {
+export const setUpdateValidator = (req, res, next) => {
   req.schema = updateToDoListSchema;
   next();
 }

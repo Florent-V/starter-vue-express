@@ -10,7 +10,7 @@ router.post('/', setCreateValidator, validator, createToDoItem);
 router.get('/', getToDoItems);
 
 router.use('/:itemId', isToDoItemInToDoList);
-router.get('/:itemId', isToDoItemInToDoList,getToDoItemById);
+router.get('/:itemId', getToDoItemById);
 router.patch('/:itemId', setUpdateValidator, validator, updateToDoItem);
 router.delete('/:itemId', deleteToDoItem);
 

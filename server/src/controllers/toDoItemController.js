@@ -5,9 +5,10 @@ import NotFoundError from '../error/notFoundError.js';
 export const createToDoItem = async (req, res, next) => {
   try {
     req.body.toDoListId = req.params.id;
-    console.log(req.body);
-    const toDoItem = await ToDoItem.create(req.body);
-    res.status(201).json(toDoItem);
+
+    res.statusCode = 201;
+    res.data.toDoItem = await ToDoItem.create(req.body);
+    next();
   } catch (error) {
     return next(error);
   }
@@ -22,7 +23,8 @@ export const getToDoItems = async (req, res, next) => {
         toDoListId: id
       }
     });
-    res.status(200).json(toDoItems);
+    res.data.toDoItems = toDoItems;
+    next();
   } catch (error) {
     return next(error);
   }
@@ -30,12 +32,13 @@ export const getToDoItems = async (req, res, next) => {
 
 // Récupération d'un ToDoItem par ID
 export const getToDoItemById = async (req, res, next) => {
+  console.log('coucou')
   try {
     if (!req.toDoItem) {
       const toDoItem = await ToDoItem.findByPk(req.params.itemId);
       if (!toDoItem) throw new NotFoundError('ToDoItem Not Found');
     }
-    req.data = req.toDoItem;
+    res.data.toDoItem = req.toDoItem;
     next();
   } catch (error) {
     return next(error);
@@ -51,8 +54,8 @@ export const updateToDoItem = async (req, res, next) => {
 
     if (!updated) throw new NotFoundError('ToDoItem Not Found');
 
-    const updatedToDoItem = await ToDoItem.findByPk(req.params.itemId);
-    res.status(200).json(updatedToDoItem);
+    res.data.toDoItem = await ToDoItem.findByPk(req.params.itemId);
+    next();
   } catch (error) {
     return next(error);
   }

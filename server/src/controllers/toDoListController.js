@@ -6,8 +6,10 @@ export const createToDoList = async (req, res, next) => {
   try {
     const userId = req.user.id;
     req.body.userId = userId;
-    const toDoList = await ToDoList.create(req.body);
-    res.status(201).json(toDoList);
+
+    res.statusCode = 201;
+    res.data.toDoList = await ToDoList.create(req.body);
+    next();
   } catch (error) {
     return next(error);
   }
@@ -46,8 +48,8 @@ export const updateToDoList = async (req, res, next) => {
 
     if (!updated) throw new NotFoundError('ToDoList Not Found');
 
-    const updatedToDoList = await ToDoList.findByPk(req.params.id);
-    res.status(200).json(updatedToDoList);
+    res.data.toDoList = await ToDoList.findByPk(req.params.id);
+    next();
   } catch (error) {
     return next(error);
   }
