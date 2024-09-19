@@ -1,10 +1,17 @@
 import { defineStore } from 'pinia';
 import { client } from '@/utils/requestMaker.js';
 
+const getLocalStorageUser = () => {
+  const storedUser = localStorage.getItem('user');
+  console.log('getLocalStorageUser() - storedUser:', storedUser);
+  console.log('getLocalStorageUser() - storedUser parsed:', JSON.parse(storedUser));
+  return storedUser ? JSON.parse(storedUser) : null;
+};
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     authenticated: false,
-    user: localStorage.getItem('user'),
+    user: getLocalStorageUser(),
   }),
   getters: {
     isAuthenticated: (state) => !!state.user,
@@ -18,8 +25,8 @@ export const useAuthStore = defineStore('auth', {
           { email, password }
         );
         console.log('Connexion réussie:', data);
-        localStorage.setItem('user', data.username);
-        this.user = data.username;
+        localStorage.setItem('user', JSON.stringify(data));
+        this.user = data;
         this.authenticated = true;
         return data;
       } catch (error) {

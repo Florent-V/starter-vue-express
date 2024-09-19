@@ -14,7 +14,7 @@ const navigateToCreateProduct = () => {
 
 onMounted(async () => {
   const data = await client.get('/api/product');
-  products.value = data;
+  products.value = data.products;
 });
 </script>
 

@@ -1,3 +1,34 @@
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+
+const props = defineProps({
+  product: {
+    type: Object,
+    default: () => ({
+      id: null,
+      name: '',
+      price: 0,
+      description: '',
+      image: '',
+      available: true,
+      quantity: 0
+    })
+  }
+});
+const emit = defineEmits(['submit', 'cancel']);
+
+const form = ref({ ...props.product });
+const isEditing = computed(() => !!form.value.id);
+
+const submitForm = () => {
+  emit('submit', { ...form.value });
+};
+
+onMounted(() => {
+  form.value = { ...props.product };
+});
+</script>
+
 <template>
   <div class="bg-white dark:bg-gray-800 p-6 my-6 rounded-lg shadow-md">
     <h2 class="text-2xl font-bold mb-4">{{ isEditing ? 'Edit Product' : 'Add New Product' }}</h2>
@@ -40,35 +71,3 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from 'vue';
-
-const props = defineProps({
-  product: {
-    type: Object,
-    default: () => ({
-      id: null,
-      name: '',
-      price: 0,
-      description: '',
-      image: '',
-      available: true,
-      quantity: 0
-    })
-  }
-});
-
-const emit = defineEmits(['submit', 'cancel']);
-
-const form = ref({ ...props.product });
-
-const isEditing = computed(() => !!form.value.id);
-
-const submitForm = () => {
-  emit('submit', { ...form.value });
-};
-
-onMounted(() => {
-  form.value = { ...props.product };
-});
-</script>

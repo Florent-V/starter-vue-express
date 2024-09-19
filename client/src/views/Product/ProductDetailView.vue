@@ -13,7 +13,7 @@ const isEditing = ref(false);
 
 onMounted(async () => {
   const data = await client.get(`/api/product/${route.params.id}`);
-  product.value = data;
+  product.value = data.product;
 });
 
 const deleteProduct = async () => {

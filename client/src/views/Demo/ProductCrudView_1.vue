@@ -1,3 +1,72 @@
+<script setup>
+import { ref, onMounted, computed } from 'vue';
+import { useProductsStore } from '@/stores/productsStore';
+import FormComponent from '@/components/Demo/FormComponent_1.vue'
+
+const showForm = ref(false);
+const editingProduct = ref(null);
+const productsStore = useProductsStore();
+
+// Etat du toggle, par défaut il est sur 'afficher tous les produits'
+const showAvailableOnly = ref(false);
+
+// Computed pour afficher les produits en fonction du toggle
+const filteredProducts = computed(() => {
+  if (showAvailableOnly.value) {
+    return productsStore.availableProducts
+  }
+  return productsStore.products;  // Afficher tous les produits
+});
+
+// Fonction pour basculer l'état du toggle
+const toggleAvailableOnly = () => {
+  showAvailableOnly.value = !showAvailableOnly.value;
+};
+
+const openCreateForm = () => {
+  editingProduct.value = null;
+  showForm.value = true;
+};
+
+const openEditForm = (product) => {
+  editingProduct.value = { ...product };
+  showForm.value = true;
+};
+
+const closeForm = () => {
+  editingProduct.value = null;
+  showForm.value = false;
+};
+
+const handleFormSubmit = (formData) => {
+  console.log('formData', formData);
+  if (editingProduct.value) {
+    console.log('editingProduct', editingProduct.value);
+    // Mettre à jour le produit existant
+    productsStore.updateProduct({ ...formData, id: editingProduct.value.id });
+  } else {
+    console.log('new product');
+    // Ajouter un nouveau produit
+    productsStore.addProduct(formData);
+  }
+  closeForm();
+};
+
+const deleteProduct = (id) => {
+  if (confirm('Are you sure you want to delete this product?')) {
+    productsStore.deleteProduct(id);
+  }
+};
+
+// Charger les produits à l'initialisation
+onMounted(() => {
+  if (productsStore.products.length === 0) {
+    productsStore.fetchProducts();
+  }
+});
+
+</script>
+
 <template>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-6 text-blue-800 dark:text-yellow-300">Product Management</h1>
@@ -28,9 +97,10 @@
     </div>
 
     <FormComponent
-      v-model:showForm="showForm"
+      v-if="showForm"
       :editProduct="editingProduct"
       @submitForm="handleFormSubmit"
+      @cancel="closeForm"
     />
 
     <div class="grid grid-cols-1 gap-4 md:hidden">
@@ -104,69 +174,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useProductsStore } from '@/stores/productsStore';
-import FormComponent from '@/components/Demo/FormComponent_1.vue'
-
-const showForm = ref(false);
-const editingProduct = ref(null);
-const productsStore = useProductsStore();
-
-// Etat du toggle, par défaut il est sur 'afficher tous les produits'
-const showAvailableOnly = ref(false);
-
-// Computed pour afficher les produits en fonction du toggle
-const filteredProducts = computed(() => {
-  if (showAvailableOnly.value) {
-    return productsStore.availableProducts
-  }
-  return productsStore.products;  // Afficher tous les produits
-});
-
-// Fonction pour basculer l'état du toggle
-const toggleAvailableOnly = () => {
-  showAvailableOnly.value = !showAvailableOnly.value;
-};
-
-const openCreateForm = () => {
-  editingProduct.value = null;
-  showForm.value = true;
-};
-
-const openEditForm = (product) => {
-  editingProduct.value = { ...product };
-  showForm.value = true;
-};
-
-const handleFormSubmit = (formData) => {
-  console.log('formData', formData);
-  if (editingProduct.value) {
-    console.log('editingProduct', editingProduct.value);
-    // Mettre à jour le produit existant
-    productsStore.updateProduct({ ...formData, id: editingProduct.value.id });
-  } else {
-    console.log('new product');
-    // Ajouter un nouveau produit
-    productsStore.addProduct(formData);
-  }
-  showForm.value = false;
-  editingProduct.value = null;
-};
-
-
-const deleteProduct = (id) => {
-  if (confirm('Are you sure you want to delete this product?')) {
-    productsStore.deleteProduct(id);
-  }
-};
-
-// Charger les produits à l'initialisation
-onMounted(() => {
-  if (productsStore.products.length === 0) {
-    productsStore.fetchProducts();
-  }
-});
-
-</script>

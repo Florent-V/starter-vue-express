@@ -1,3 +1,108 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+import FormComponentBis from '@/components/Demo/FormComponent_2.vue'
+
+const router = useRouter()
+const isFormVisible = ref(false)
+const currentProduct = ref({})
+const products = ref([{
+  id: 1,
+  name: 'Smartphone X',
+  price: 699.99,
+  description: 'Latest model with advanced features',
+  image: 'https://via.placeholder.com/800x600.png?text=Smartphone+X',
+  available: true,
+  quantity: 50
+},
+  {
+    id: 2,
+    name: 'Laptop Pro',
+    price: 1299.99,
+    description: 'Powerful laptop for professionals',
+    image: 'https://via.placeholder.com/800x600.png?text=Laptop+Pro',
+    available: true,
+    quantity: 30
+  },
+  {
+    id: 3,
+    name: 'Wireless Earbuds',
+    price: 129.99,
+    description: 'High-quality sound with long battery life',
+    image: 'https://via.placeholder.com/800x600.png?text=Wireless+Earbuds',
+    available: false,
+    quantity: 0
+  }])
+
+const fetchProducts = async () => {
+  // try {
+  //   const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product`)
+  //   products.value = response.data
+  // } catch (error) {
+  //   console.error('Error fetching products:', error)
+  //   // Fallback to sample data if API fails
+  //   products.value = sampleProducts
+  // }
+  console.log('fetchProducts')
+}
+
+const deleteProduct = async (id) => {
+  // if (confirm('Are you sure you want to delete this product?')) {
+  //   try {
+  //     await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/product/${id}`)
+  //     products.value = products.value.filter(product => product.id !== id)
+  //   } catch (error) {
+  //     console.error('Error deleting product:', error)
+  //   }
+  // }
+  console.log('deleteProduct')
+}
+
+const truncateText = (text, length) => {
+  return text.length > length ? text.substring(0, length) + '...' : text
+}
+
+const showForm = (mode, product = {}) => {
+  currentProduct.value = mode === 'edit' ? { ...product } : {}
+  isFormVisible.value = true
+}
+
+const handleFormSubmit = async (formData) => {
+  // try {
+  //   if (formData.id) {
+  //     // Edit existing product
+  //     await axios.put(`${import.meta.env.VITE_BASE_URL}/api/product/${formData.id}`, formData)
+  //     const index = products.value.findIndex(p => p.id === formData.id)
+  //     if (index !== -1) {
+  //       products.value[index] = formData
+  //     }
+  //   } else {
+  //     // Create new product
+  //     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/product`, formData)
+  //     products.value.push(response.data)
+  //   }
+  //   isFormVisible.value = false
+  // } catch (error) {
+  //   console.error('Error submitting product:', error)
+  // Fallback to local update for demo purposes
+  if (formData.id) {
+    const index = products.value.findIndex(p => p.id === formData.id)
+    if (index !== -1) {
+      products.value[index] = formData
+    }
+  } else {
+    formData.id = Math.max(...products.value.map(p => p.id)) + 1
+    products.value.push(formData)
+  }
+  isFormVisible.value = false
+
+  console.log('handleFormSubmit')
+}
+
+onMounted(fetchProducts)
+</script>
+
 <template>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-6 text-blue-800 dark:text-yellow-300">Product Management</h1>
@@ -113,142 +218,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
-import FormComponentBis from '@/components/Demo/FormComponent_2.vue'
-
-const router = useRouter()
-const isFormVisible = ref(false)
-const currentProduct = ref({})
-const products = ref([{
-  id: 1,
-  name: 'Smartphone X',
-  price: 699.99,
-  description: 'Latest model with advanced features',
-  image: 'https://via.placeholder.com/800x600.png?text=Smartphone+X',
-  available: true,
-  quantity: 50
-},
-  {
-    id: 2,
-    name: 'Laptop Pro',
-    price: 1299.99,
-    description: 'Powerful laptop for professionals',
-    image: 'https://via.placeholder.com/800x600.png?text=Laptop+Pro',
-    available: true,
-    quantity: 30
-  },
-  {
-    id: 3,
-    name: 'Wireless Earbuds',
-    price: 129.99,
-    description: 'High-quality sound with long battery life',
-    image: 'https://via.placeholder.com/800x600.png?text=Wireless+Earbuds',
-    available: false,
-    quantity: 0
-  }])
-
-// Sample data for initialization with placeholder images
-// const products = [
-//   {
-//     id: 1,
-//     name: 'Smartphone X',
-//     price: 699.99,
-//     description: 'Latest model with advanced features',
-//     image: 'https://via.placeholder.com/800x600.png?text=Smartphone+X',
-//     available: true,
-//     quantity: 50
-//   },
-//   {
-//     id: 2,
-//     name: 'Laptop Pro',
-//     price: 1299.99,
-//     description: 'Powerful laptop for professionals',
-//     image: 'https://via.placeholder.com/800x600.png?text=Laptop+Pro',
-//     available: true,
-//     quantity: 30
-//   },
-//   {
-//     id: 3,
-//     name: 'Wireless Earbuds',
-//     price: 129.99,
-//     description: 'High-quality sound with long battery life',
-//     image: 'https://via.placeholder.com/800x600.png?text=Wireless+Earbuds',
-//     available: false,
-//     quantity: 0
-//   }
-// ]
-
-const fetchProducts = async () => {
-  // try {
-  //   const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/product`)
-  //   products.value = response.data
-  // } catch (error) {
-  //   console.error('Error fetching products:', error)
-  //   // Fallback to sample data if API fails
-  //   products.value = sampleProducts
-  // }
-  console.log('fetchProducts')
-}
-
-const deleteProduct = async (id) => {
-  // if (confirm('Are you sure you want to delete this product?')) {
-  //   try {
-  //     await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/product/${id}`)
-  //     products.value = products.value.filter(product => product.id !== id)
-  //   } catch (error) {
-  //     console.error('Error deleting product:', error)
-  //   }
-  // }
-  console.log('deleteProduct')
-}
-
-const truncateText = (text, length) => {
-  return text.length > length ? text.substring(0, length) + '...' : text
-}
-
-const showForm = (mode, product = {}) => {
-  currentProduct.value = mode === 'edit' ? { ...product } : {}
-  isFormVisible.value = true
-}
-
-const handleFormSubmit = async (formData) => {
-  // try {
-  //   if (formData.id) {
-  //     // Edit existing product
-  //     await axios.put(`${import.meta.env.VITE_BASE_URL}/api/product/${formData.id}`, formData)
-  //     const index = products.value.findIndex(p => p.id === formData.id)
-  //     if (index !== -1) {
-  //       products.value[index] = formData
-  //     }
-  //   } else {
-  //     // Create new product
-  //     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/product`, formData)
-  //     products.value.push(response.data)
-  //   }
-  //   isFormVisible.value = false
-  // } catch (error) {
-  //   console.error('Error submitting product:', error)
-    // Fallback to local update for demo purposes
-    if (formData.id) {
-      const index = products.value.findIndex(p => p.id === formData.id)
-      if (index !== -1) {
-        products.value[index] = formData
-      }
-    } else {
-      formData.id = Math.max(...products.value.map(p => p.id)) + 1
-      products.value.push(formData)
-    }
-    isFormVisible.value = false
-
-  console.log('handleFormSubmit')
-}
-
-onMounted(fetchProducts)
-</script>
 
 <style scoped>
 /* No additional styles needed as we're using Tailwind classes for responsiveness */

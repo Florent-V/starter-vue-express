@@ -1,6 +1,7 @@
 import ProductFormView from "@/views/Product/ProductFormView.vue";
 import ProductView from "@/views/Product/ProductView.vue";
 import ProductDetailView from "@/views/Product/ProductDetailView.vue";
+import ProductBisView from "@/views/Product/ProductBisView.vue";
 
 export default [
     {
@@ -20,6 +21,15 @@ export default [
             description: 'This is the product page'
         },
         component: ProductView
+    },
+    {
+        path: '/productbis',
+        name: 'productbis',
+        meta: {
+            title: 'ProductListView',
+            description: 'This is the product page'
+        },
+        component: ProductBisView
     },
     {
         path: '/product/:id',

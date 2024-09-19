@@ -1,22 +1,23 @@
 <script setup>
-// Le script reste inchangé
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import {initializeTheme} from '@/utils/initDarkMode';
+import { useAuthStore } from '@/stores/authStore';
 
+const userStore = useAuthStore();
+const user = computed(() => userStore.user);
+// Simulated user object, replace with your actual user management logic
+// const user = ref({
+//   firstName: 'John',
+//   lastName: 'Doe',
+//   email: 'john.doe@example.com',
+//   photoUrl: 'https://via.placeholder.com/150'
+// })
+//const user = ref(null)
 
 const isMobileMenuOpen = ref(false)
 const isResourcesDropdownOpen = ref(false)
 const isUserDropdownOpen = ref(false)
 const isMobileResourcesDropdownOpen = ref(false)
-// Simulated user object, replace with your actual user management logic
-const user = ref({
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'john.doe@example.com',
-  photoUrl: 'https://via.placeholder.com/150'
-})
-//const user = ref(null)
-
 const isDarkMode = ref(document.documentElement.classList.contains('dark'));
 
 const toggleDarkMode = () => {
@@ -75,6 +76,10 @@ const manageOutsideClickListener = () => {
   console.log('Event listener removed');
 };
 
+const logout = () => {
+  userStore.logout();
+}
+
 onMounted(() => {
   initializeTheme(isDarkMode);
   console.log('User:', user.value);
@@ -104,6 +109,12 @@ onMounted(() => {
             <RouterLink to="/product"
                         class="hover:text-blue-600 dark:hover:text-yellow-300 transition duration-100">
               Product
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/localtodolist"
+                        class="hover:text-blue-600 dark:hover:text-yellow-300 transition duration-100">
+              Local ToDoList
             </RouterLink>
           </li>
           <li>
@@ -191,7 +202,7 @@ onMounted(() => {
 
         <template v-if="user">
           <div class="relative">
-            <img @click.stop="toggleUserDropdown" :src="user.photoUrl" alt="User photo"
+            <img @click.stop="toggleUserDropdown" :src="user.photoUrl ?? 'https://i.pravatar.cc/150?img=3'" alt="User photo"
                  class="h-10 w-10 rounded-full cursor-pointer">
             <div v-show="isUserDropdownOpen"
                  class="absolute right-0 mt-2 w-64 bg-blue-100 dark:bg-gray-700 rounded-md shadow-lg">
@@ -201,19 +212,40 @@ onMounted(() => {
               </div>
               <hr class="border-gray-200 dark:border-gray-600">
               <ul>
-                <li><a href="#"
-                       class="block px-4 py-2 text-sm hover:bg-blue-200 dark:hover:bg-gray-600">Dashboard</a></li>
-                <li><a href="#"
-                       class="block px-4 py-2 text-sm hover:bg-blue-200 dark:hover:bg-gray-600">Settings</a></li>
-                <li><a href="#" class="block px-4 py-2 text-sm hover:bg-blue-200 dark:hover:bg-gray-600">Sign
-                  Out</a></li>
+                <li>
+                  <a href="#"
+                       class="block px-4 py-2 text-sm hover:bg-blue-200 dark:hover:bg-gray-600">
+                  Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a href="#"
+                       class="block px-4 py-2 text-sm hover:bg-blue-200 dark:hover:bg-gray-600">
+                    Settings
+                  </a>
+                </li>
+                <li>
+                  <button @click="logout" class="ml-4 flex items-center gap-1 py-2 text-sm text-red-600 hover:text-red-800">
+                    <span>Sign Out</span>
+                    <!-- Icône SVG de déconnexion -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h6a2 2 0 002-2v-1" />
+                    </svg>
+                  </button>
+                </li>
               </ul>
             </div>
           </div>
         </template>
         <button v-else
                 class="bg-blue-500 dark:bg-yellow-400 hover:bg-blue-600 dark:hover:bg-yellow-500 text-white dark:text-gray-900 px-6 py-2 rounded-full font-semibold transition duration-300">
-          Login / Register
+          <RouterLink to="/signin" class="">
+            Login
+          </RouterLink>
+          /
+          <RouterLink to="/signup" class="">
+            Register
+          </RouterLink>
         </button>
         <button class="md:hidden p-2" @click.stop="toggleMobileMenu">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-white" fill="none"

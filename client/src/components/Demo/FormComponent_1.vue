@@ -1,5 +1,47 @@
+<script setup>
+import { ref, watch, computed } from 'vue';
+
+const props = defineProps({
+  editProduct: {
+    type: Object,
+    default: () => ({ name: '', price: 0, description: '', image: '', available: true, quantity: 0 }),
+  },
+});
+
+const emit = defineEmits(['cancel', 'submitForm']);
+
+const form = ref({ ...props.editProduct});
+const editMode = computed(() => !!form.value.id);
+
+const submitForm = () => {
+  emit('submitForm', { ...form.value });
+  closeForm();
+};
+
+const closeForm = () => {
+  resetForm();
+  emit('cancel');
+};
+
+const resetForm = () => {
+  form.value = {
+    name: '',
+    price: 0,
+    description: '',
+    image: '',
+    available: true,
+    quantity: 0,
+  };
+};
+
+watch(() => props.editProduct, (newValue) => {
+    form.value = { ...newValue };
+}, { immediate: true });
+
+</script>
+
 <template>
-  <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" v-if="showForm">
+  <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
     <div class="relative top-20 mx-auto p-5 border w-full sm:w-[28rem] md:w-[32rem] lg:w-[36rem] shadow-lg rounded-md bg-white dark:bg-gray-800 dark:border-gray-700">
       <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white mb-4">
         {{ editMode ? 'Edit Product' : 'Add New Product' }}
@@ -49,57 +91,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, watch } from 'vue';
-
-const props = defineProps({
-  showForm: Boolean,
-  editProduct: Object,
-});
-
-const emit = defineEmits(['update:showForm', 'submitForm']);
-
-const editMode = ref(false);
-const form = ref({
-  name: '',
-  price: 0,
-  description: '',
-  image: '',
-  available: true,
-  quantity: 0,
-});
-
-const resetForm = () => {
-  form.value = {
-    name: '',
-    price: 0,
-    description: '',
-    image: '',
-    available: true,
-    quantity: 0,
-  };
-};
-
-watch(() => props.editProduct, (newValue) => {
-  if (newValue) {
-    form.value = { ...newValue };
-    editMode.value = true;
-  } else {
-    resetForm();
-    editMode.value = false;
-  }
-}, { immediate: true });
-
-
-
-const submitForm = () => {
-  emit('submitForm', { ...form.value });
-  closeForm();
-};
-
-const closeForm = () => {
-  emit('update:showForm', false);
-  resetForm();
-};
-</script>

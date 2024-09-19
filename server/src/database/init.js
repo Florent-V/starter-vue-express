@@ -13,7 +13,7 @@ const initDB = async (option) => {
     defineAssociations();
 
     // Synchronisation des modèles avec la base
-    //await sequelize.sync({ [option]: true });
+    await sequelize.sync({ [option]: true });
     console.log(`Database synced with ${option} option.`);
 
     // Seed the database with test data
