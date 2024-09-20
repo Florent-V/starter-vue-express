@@ -47,6 +47,41 @@ All is dockerized and ready to use.
 ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
 ![WebStorm](https://img.shields.io/badge/webstorm-143?style=for-the-badge&logo=webstorm&logoColor=white&color=black)
 
+
+<!-- TOC -->
+* [Front - VueJS](#front---vuejs)
+  * [Overview](#overview)
+    * [Vue3](#vue3)
+    * [Features](#features)
+    * [Testing](#testing)
+    * [Styling](#styling)
+    * [Code Quality](#code-quality)
+* [Back - Express](#back---express)
+  * [Overview](#overview-1)
+    * [Features](#features-1)
+    * [API Endpoints](#api-endpoints)
+* [Installation](#installation)
+  * [How To Setup](#how-to-setup)
+  * [Configuration .env](#configuration-env)
+  * [Checklist](#checklist)
+* [TODO](#todo)
+  * [Docker](#docker)
+    * [Start the containers](#start-the-containers)
+    * [Stop the containers](#stop-the-containers)
+    * [Restart the containers](#restart-the-containers)
+    * [Access to the MySQL container](#access-to-the-mysql-container)
+    * [Access to the Node container](#access-to-the-node-container)
+    * [Execute a SQL script in the MySQL container](#execute-a-sql-script-in-the-mysql-container)
+      * [Method 1 : Script already in the container](#method-1--script-already-in-the-container)
+      * [Method 2 : Copy the script in the container and execute it](#method-2--copy-the-script-in-the-container-and-execute-it)
+      * [Method 3 : Access to the shell](#method-3--access-to-the-shell)
+      * [Method 4 : Docker-compose](#method-4--docker-compose)
+      * [Export the database](#export-the-database)
+  * [Contributing](#contributing)
+  * [License](#license)
+<!-- TOC -->
+
+
 # Front - VueJS
 
 ## Overview
