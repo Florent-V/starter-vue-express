@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../database/connect.js';
 
-const TodoItem = sequelize.define('TodoItem', {
+const ToDoItem = sequelize.define('ToDoItem', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -20,6 +20,11 @@ const TodoItem = sequelize.define('TodoItem', {
     allowNull: false,
     defaultValue: 1,
   },
+  done: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
   labelId: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -35,4 +40,4 @@ const TodoItem = sequelize.define('TodoItem', {
   }
 );
 
-export default TodoItem;
+export default ToDoItem;

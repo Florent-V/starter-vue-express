@@ -10,8 +10,8 @@ const selectedToDo = ref(null); // For editing
 const handleFormSubmit = async (data) => {
   if (selectedToDo.value) {
     // Update existing to-do
-    const response = await client.put(`/api/todolist/${selectedToDo.value.id}`, data);
-    const index = toDoLists.value.findIndex(list => list.id === selectedToDo.value.id);
+    const response = await client.patch(`/api/todolist/${selectedToDo.value.id}`, data);
+    const index = toDoLists.value.findIndex(list => list.id === response.toDoList.id);
     toDoLists.value[index] = response.toDoList;
   } else {
     // Create new to-do
@@ -28,6 +28,11 @@ const openCreateForm = () => {
 const openEditForm = (list) => {
   selectedToDo.value = {...list};
   showForm.value = true;
+};
+
+const deleteList = async (list) => {
+  await client.delete(`/api/todolist/${list.id}`);
+  toDoLists.value = toDoLists.value.filter(item => item.id !== list.id);
 };
 
 const closeForm = () => {
@@ -73,32 +78,6 @@ onMounted(fetchToDoLists);
         @cancel="closeForm"
     />
 
-    <!--    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg dark:shadow-gray-700">-->
-    <!--      &lt;!&ndash; Title: Add a new product &ndash;&gt;-->
-    <!--      <h2 class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-t-lg text-xl font-semibold">Créer une ToDo List</h2>-->
-
-    <!--      <div class="p-4">-->
-    <!--        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">-->
-    <!--          &lt;!&ndash; Name field &ndash;&gt;-->
-    <!--          <div class="relative order-1">-->
-    <!--            <input type="text" id="title" placeholder=" " class="peer border border-gray-300 dark:border-gray-600 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-yellow-400 transition w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white" v-model="newtoDoList.title" />-->
-    <!--            <label for="title" class="rounded absolute left-3 -top-2 bg-white dark:bg-transparent peer-focus:bg-white dark:peer-focus:bg-gray-800 px-1 text-gray-600 dark:text-gray-100 peer-placeholder-shown:bg-transparent peer-placeholder-shown:top-4 peer-placeholder-shown:left-4 peer-placeholder-shown:text-gray-400 dark:peer-placeholder-shown:text-gray-100 transition-all peer-focus:-top-4 peer-focus:left-3 peer-focus:text-blue-600 dark:peer-focus:text-yellow-400">Titre</label>-->
-    <!--          </div>-->
-
-    <!--          &lt;!&ndash; Add button (takes full width in its column) &ndash;&gt;-->
-    <!--          <div class="text-right md:text-left order-3 md:order-2">-->
-    <!--            <button @click="addToDoList" class="w-full bg-blue-600 dark:bg-yellow-400 text-white dark:text-gray-900 hover:bg-blue-700 dark:hover:bg-yellow-500 px-6 py-3 rounded-lg text-lg transition duration-300 font-semibold">Add</button>-->
-    <!--          </div>-->
-
-    <!--          &lt;!&ndash; Description field (second row on desktop, second on mobile as well) &ndash;&gt;-->
-    <!--          <div class="relative order-2 md:col-span-2">-->
-    <!--            <textarea id="description" rows="4" placeholder=" " class="peer border border-gray-300 dark:border-gray-600 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-yellow-400 transition w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white" v-model="newtoDoList.description"></textarea>-->
-    <!--            <label for="description" class="rounded absolute left-3 -top-2 bg-white dark:bg-transparent peer-focus:bg-white dark:peer-focus:bg-gray-800 px-1 text-gray-600 dark:text-gray-100 peer-placeholder-shown:bg-transparent peer-placeholder-shown:top-4 peer-placeholder-shown:left-4 peer-placeholder-shown:text-gray-400 dark:peer-placeholder-shown:text-gray-100 transition-all peer-focus:-top-4 peer-focus:left-3 peer-focus:text-blue-600 dark:peer-focus:text-yellow-400">Description</label>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
-
     <!--    spacing div -->
     <div class="h-6"></div>
 
@@ -131,12 +110,15 @@ onMounted(fetchToDoLists);
                       class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500 mr-2">
                 <i class="fas fa-edit"></i>
               </button>
-              <button class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500 mr-2">
+              <button @click="deleteList(list)"
+                      class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500 mr-2">
                 <i class="fas fa-trash-alt"></i>
               </button>
-              <button class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500">
-                <i class="fas fa-eye"></i>
-              </button>
+              <RouterLink :to="`/toDoList/${list.id}`">
+                <button class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </RouterLink>
             </td>
           </tr>
           </tbody>

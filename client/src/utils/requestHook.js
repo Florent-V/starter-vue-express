@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ref } from 'vue';
 import { useAuthStore } from "@/stores/authStore";
 import router from '../router';
 
@@ -47,7 +48,12 @@ apiClient.interceptors.response.use(
 );
 
 const request = async (requestPromise) => {
+  const isLoading = ref(false);
+  const data = ref(null);
+  const error = ref(null);
   try {
+    isLoading.value = true;
+    error.value = null; // Reset l'erreur avant un nouvel appel
     const response = await requestPromise;
     console.log('requestMaker() - Success on :', response.config.url);
     console.log('requestMaker() - Data:', response.data);
@@ -61,6 +67,8 @@ const request = async (requestPromise) => {
       // stack: error.response?.data?.stack,
     });
     throw error;
+  } finally {
+    isLoading.value = false;
   }
 };
 

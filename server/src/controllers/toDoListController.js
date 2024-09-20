@@ -1,4 +1,5 @@
 import ToDoList from '../models/toDoListModel.js';
+import ToDoItem from '../models/toDoItemModel.js';
 import NotFoundError from '../error/notFoundError.js';
 
 // Création d'un ToDoList
@@ -28,8 +29,16 @@ export const getAllToDoLists = async (req, res, next) => {
 // Récupération d'un ToDoList par ID
 export const getToDoListById = async (req, res, next) => {
   try {
-    const toDoList = await ToDoList.findByPk(req.params.id);
+    const toDoList = await ToDoList.findByPk(req.params.id, {
+      include: [
+        {
+          model: ToDoItem, // Assure-toi que ce modèle est correctement importé
+          as: 'toDoItems'
+        }
+      ]
+    });
     if (!toDoList) throw new NotFoundError('ToDoList Not Found');
+    console.log('toDoList', toDoList);
 
     req.data = toDoList;
     next();

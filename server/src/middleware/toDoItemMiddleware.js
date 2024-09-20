@@ -1,4 +1,4 @@
-import TodoItem from "../models/toDoItemModel.js";
+import ToDoItem from "../models/toDoItemModel.js";
 import { toDoItemSchema, updateToDoItemSchema } from "../joiSchema/toDoItemSchema.js";
 import NotFoundError from "../error/notFoundError.js";
 
@@ -7,9 +7,9 @@ export const isToDoItemInToDoList = async (req, res, next) => {
     console.log('req.params:', req.params);
     const { itemId, id: listId } = req.params;
   
-    const toDoItem = await TodoItem.findOne({ where: { id: itemId, todolistId: listId } });
+    const toDoItem = await ToDoItem.findOne({ where: { id: itemId, todolistId: listId } });
   
-    if (!toDoItem) throw new NotFoundError('Todo item not found in this ToDoList.');
+    if (!toDoItem) throw new NotFoundError('ToDo item not found in this ToDoList.');
   
     req.toDoItem = toDoItem;
     next();
@@ -19,7 +19,7 @@ export const isToDoItemInToDoList = async (req, res, next) => {
 };
 
 export const setEntity = (req, res, next) => {
-  req.entity = TodoItem;
+  req.entity = ToDoItem;
   next();
 }
 

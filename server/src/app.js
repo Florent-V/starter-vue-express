@@ -57,7 +57,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 // Tutorial Routes
 app.use('/api/product', productRoutes);
-// ToDoList && TodoItem Routes
+// ToDoList && ToDoItem Routes
 app.use('/api/todolist', toDoListRoutes);
 // Send middleware
 app.use(send);

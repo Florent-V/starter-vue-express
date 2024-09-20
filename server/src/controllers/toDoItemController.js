@@ -48,14 +48,21 @@ export const getToDoItemById = async (req, res, next) => {
 // Mise à jour d'un ToDoItem
 export const updateToDoItem = async (req, res, next) => {
   try {
+    console.log('coucou')
+    console.log('req.body', req.body)
+    console.log('req.params.itemId', req.params.itemId)
     const [updated] = await ToDoItem.update(req.body, {
       where: { id: req.params.itemId }
     });
+    console.log('updated', updated)
 
     if (!updated) throw new NotFoundError('ToDoItem Not Found');
 
-    res.data.toDoItem = await ToDoItem.findByPk(req.params.itemId);
-    next();
+    const uptadedItem = await ToDoItem.findByPk(req.params.itemId);
+    res.data = { toDoItem: uptadedItem };
+    res.status(200).json({ toDoItem: uptadedItem });
+    console.log('res.data', res.data)
+    // next();
   } catch (error) {
     return next(error);
   }

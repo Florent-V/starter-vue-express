@@ -86,7 +86,6 @@ onMounted(() => {
 });
 </script>
 
-
 <template>
   <header
       class="fixed top-0 left-0 right-0 bg-white bg-opacity-20 dark:bg-gray-800 dark:bg-opacity-20 backdrop-blur-md py-4 transition-colors duration-100 z-50">
@@ -112,12 +111,6 @@ onMounted(() => {
             </RouterLink>
           </li>
           <li>
-            <RouterLink to="/localtodolist"
-                        class="hover:text-blue-600 dark:hover:text-yellow-300 transition duration-100">
-              Local ToDoList
-            </RouterLink>
-          </li>
-          <li>
             <RouterLink to="/toDoList"
                         class="hover:text-blue-600 dark:hover:text-yellow-300 transition duration-100">
               ToDoList
@@ -127,7 +120,7 @@ onMounted(() => {
             <button @click.stop="toggleResourcesDropdown"
                     class="hover:text-blue-600 dark:hover:text-yellow-300 transition duration-100">
               Demo
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-1" fill="none"
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mb-1 inline-block ml-1" fill="none"
                    viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
@@ -156,6 +149,12 @@ onMounted(() => {
                 <RouterLink to="/demo-product-crud-2"
                             class="block px-4 py-2 text-base hover:bg-blue-200 dark:hover:bg-gray-600">
                   Demo Crud #2
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink to="/localtodolist"
+                            class="block px-4 py-2 text-base hover:bg-blue-200 dark:hover:bg-gray-600">
+                  Local ToDoList
                 </RouterLink>
               </li>
             </ul>
@@ -317,6 +316,12 @@ onMounted(() => {
               <RouterLink to="/demo-product-crud-2"
                           class="block py-2 text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-yellow-300 transition duration-300">
                 Demo Crud #2
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/localtodolist"
+                          class="block py-2 text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-yellow-300 transition duration-300">
+                Local ToDoList
               </RouterLink>
             </li>
           </ul>

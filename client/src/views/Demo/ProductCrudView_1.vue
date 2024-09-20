@@ -85,12 +85,13 @@ onMounted(() => {
       <!-- Container du toggle -->
       <div
         class="relative w-16 h-8 bg-gray-300 rounded-full p-1 cursor-pointer"
+        :class="{ 'bg-green-500': showAvailableOnly, 'bg-red-500': !showAvailableOnly }"
         @click="toggleAvailableOnly"
       >
         <!-- Rond de slider -->
         <div
           class="absolute top-1 left-1 h-6 w-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out"
-          :class="{ 'translate-x-8 bg-green-500': showAvailableOnly, 'bg-red-500': !showAvailableOnly }"
+          :class="{ 'translate-x-8': showAvailableOnly }"
           style="width: 24px; height: 24px;"
         ></div>
       </div>
