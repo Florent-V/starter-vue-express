@@ -62,7 +62,6 @@ services:
     volumes:
       - ./server:/usr/src/app
       -  api_node_modules:/usr/src/app/node_modules
-#      - ./server/node_modules:/usr/src/app/node_modules
 
 #########################################
 #   Setup MYSQL container
