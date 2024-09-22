@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../database/connect.js';
 
-const TodoList = sequelize.define('TodoList', {
+const ToDoList = sequelize.define('ToDoList', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -21,4 +21,4 @@ const TodoList = sequelize.define('TodoList', {
   }
 );
 
-export default TodoList;
+export default ToDoList;

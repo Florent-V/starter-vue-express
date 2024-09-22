@@ -21,7 +21,6 @@ const initDB = async (option) => {
       await seedDatabase();
       console.log('Database seeded with test data.');
     }
-
   } catch (error) {
     console.error('Something went wrong with the database:', error);
   }

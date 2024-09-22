@@ -49,10 +49,12 @@ export const signin = async (req, res, next) => {
     return res.status(200).send({
       id: user.id,
       username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       roles: authorities,
       token,
-      refreshToken
+      //refreshToken
     });
   } catch (error) {
     return next(error);

@@ -1,120 +1,36 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import AboutView from '@/views/AboutView.vue'
-import DemoProductView from '@/views/Demo/DemoProductView.vue'
-import HelloView from '@/views/HelloView.vue'
-import FeaturedCardsView from '@/views/Demo/DemoFeaturedCardsView.vue'
-import NotFound from '@/views/NotFound.vue'
 import NProgress from '@/plugins/nprogress'
-import ToDoListView from '@/views/ToDoList/ToDoListView.vue'
-import SignInView from '@/views/Auth/SignInView.vue'
-import SignUpView from '@/views/Auth/SignUpView.vue'
-import ProductView from '@/views/Product/ProductView.vue'
-import ProductDetailView from '@/views/Product/ProductDetailView.vue'
-import ProductFormView from '@/views/Product/ProductFormView.vue'
-import RefreshTestView from '@/views/RefreshTestView.vue'
+import demoRoutes from "@/router/demoRoutes.js";
+import authRoutes from "@/router/authRoutes.js";
+import productRoutes from "@/router/productRoutes.js";
+import toDoListRoutes from "@/router/toDoListRoutes.js";
+import WelcomeView from '../views/WelcomeView.vue'
+import HomeView from "@/views/HomeView.vue";
+import AboutView from '@/views/AboutView.vue'
+import HelloView from '@/views/HelloView.vue'
+import NotFound from '@/views/NotFound.vue'
+import TestView from '@/views/Demo/TestView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
+      name: 'welcome',
+      meta: {
+        title: 'Welcome',
+        description: 'This is the home page'
+      },
+      component: WelcomeView
+    },
+    {
+      path: '/home',
       name: 'home',
       meta: {
         title: 'Home',
         description: 'This is the home page'
       },
       component: HomeView
-    },
-    {
-      path: '/refresh',
-      name: 'refresh',
-      meta: {
-        title: 'Refresh',
-        description: 'Refresh Test Page'
-      },
-      component: RefreshTestView
-    },
-    {
-      path: '/signin',
-      name: 'signin',
-      meta: {
-        title: 'Sign In',
-        description: 'Page to sign in'
-      },
-      component: SignInView
-    },
-    {
-      path: '/signup',
-      name: 'signup',
-      meta: {
-        title: 'Sign Up',
-        description: 'Page to sign up'
-      },
-      component: SignUpView
-    },
-    {
-      path: '/demo-product',
-      name: 'demo-product',
-      meta: {
-        title: 'Demo Product',
-        description: 'This is the demo product page'
-      },
-      component: DemoProductView
-    },
-    {
-      path: '/demo-features',
-      name: 'demo-features',
-      meta: {
-        title: 'Demo Features',
-        description: 'This is the Demo Features page'
-      },
-      component: FeaturedCardsView
-    },
-    {
-      path: '/product/new',
-      name: 'productNew',
-      meta: {
-        title: 'Product',
-        description: 'This is the product page'
-      },
-      component: ProductFormView
-    },
-    {
-      path: '/product',
-      name: 'product',
-      meta: {
-        title: 'ProductListView',
-        description: 'This is the product page'
-      },
-      component: ProductView
-    },
-    {
-      path: '/product/:id',
-      name: 'productdetail',
-      meta: {
-        title: 'ProductDetailView',
-        description: 'This is the product page'
-      },
-      component: ProductDetailView
-    },
-    {
-      path: '/product/:id/edit',
-      name: 'productedit',
-      meta: {
-        title: 'ProductDetailView',
-        description: 'This is the product page'
-      },
-      component: ProductFormView
-    },
-    {
-      path: '/todolist',
-      name: 'todolist',
-      meta: {
-        title: 'ToDoList',
-        description: 'This is the ToDoList page'
-      },
-      component: ToDoListView
     },
     {
       path: '/hello/:name',
@@ -135,10 +51,23 @@ const router = createRouter({
       component: AboutView
     },
     {
+      path: '/test',
+      name: 'test',
+      meta: {
+        title: 'Test',
+        description: 'This is the test page'
+      },
+      component: TestView
+    },
+    ...demoRoutes,
+    ...authRoutes,
+    ...productRoutes,
+    ...toDoListRoutes,
+    {
       path: '/:pathMatch(.*)*', // Correspond à toutes les routes non définies
       name: 'NotFound',
       component: NotFound,
-    },
+    }
   ]
 })
 

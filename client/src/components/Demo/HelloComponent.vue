@@ -1,5 +1,4 @@
 <script setup>
-
 import { ref } from 'vue'
 import router from '@/router/index.js'
 
@@ -12,7 +11,7 @@ function go() {
 
 <template>
   <div class="flex items-center justify-center">
-    <div class="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white p-6 rounded-lg shadow-md w-64 text-center">
+    <div class="bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white p-6 rounded-lg shadow-md w-64 text-center">
       <input
         v-model="name"
         type="text"
@@ -33,5 +32,4 @@ function go() {
 </template>
 
 <style scoped>
-
 </style>

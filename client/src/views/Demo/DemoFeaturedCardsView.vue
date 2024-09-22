@@ -2,10 +2,9 @@
 import FeatureCard from '@/components/FeaturedCardComponent.vue'
 </script>
 
-
 <template>
-  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col items-center p-8">
-    <h1 class="text-4xl mb-8">SaaS Feature Overview</h1>
+  <div class="text-gray-900 dark:text-gray-100 flex flex-col items-center p-8">
+    <h1 class="text-4xl font-bold mb-8 text-blue-800 dark:text-yellow-300">SaaS Feature Overview</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <FeatureCard>
         <template #icon>
@@ -43,8 +42,6 @@ import FeatureCard from '@/components/FeaturedCardComponent.vue'
     </div>
   </div>
 </template>
-
-
 
 <style scoped>
 </style>

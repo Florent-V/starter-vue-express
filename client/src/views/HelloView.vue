@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import CounterComponent from '@/components/CounterComponent.vue'
+import CounterComponent from '@/components/Demo/CounterComponent.vue'
 
 
 const router = useRouter()

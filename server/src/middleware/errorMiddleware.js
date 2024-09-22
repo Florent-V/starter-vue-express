@@ -7,8 +7,7 @@ export const errorHandler = (error, req, res, next) => {
   Object.getOwnPropertyNames(error).forEach((key) => {
     serializedError[key] = error[key];
   });
-
-
+  
   res.status(error.status || 500).send(serializedError);
 }
 

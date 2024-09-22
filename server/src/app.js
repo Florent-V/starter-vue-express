@@ -6,12 +6,13 @@ import cookieParser from 'cookie-parser';
 
 import initDB from './database/init.js';
 import  { errorHandler, notFound, logError } from './middleware/errorMiddleware.js';
-import { send } from './middleware/sendMiddleware.js';
+import { init, send } from './middleware/inOutMiddleware.js';
 
 import testRoutes from './routes/testRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import toDoListRoutes from './routes/toDoListRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -48,6 +49,7 @@ app.use(
 // serve the `backend/public` folder for public resources
 app.use(express.static('public'));
 // Test Routes
+app.use(init);
 app.use('', testRoutes);
 // Auth Routes
 app.use('/api/auth', authRoutes);
@@ -55,6 +57,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 // Tutorial Routes
 app.use('/api/product', productRoutes);
+// ToDoList && ToDoItem Routes
+app.use('/api/todolist', toDoListRoutes);
 // Send middleware
 app.use(send);
 

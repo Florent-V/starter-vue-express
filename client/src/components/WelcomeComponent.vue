@@ -1,7 +1,7 @@
 <script setup>
-import CounterComponent from '@/components/CounterComponent.vue'
+import CounterComponent from '@/components/Demo/CounterComponent.vue'
 import DescriptionComponent from '@/components/DescriptionComponent.vue'
-import HelloComponent from '@/components/HelloComponent.vue'
+import HelloComponent from '@/components/Demo/HelloComponent.vue'
 
 
 </script>

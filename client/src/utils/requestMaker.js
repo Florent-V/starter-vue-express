@@ -73,6 +73,9 @@ export const client = {
   
   put: (url, data, withCredentials = true) =>
     request(apiClient.put(url, data, { withCredentials })),
+
+  patch: (url, data, withCredentials = true) =>
+      request(apiClient.patch(url, data, { withCredentials })),
   
   delete: (url, withCredentials = true) =>
     request(apiClient.delete(url, { withCredentials })),
