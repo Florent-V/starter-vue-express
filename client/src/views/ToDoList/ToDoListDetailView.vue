@@ -15,7 +15,8 @@ const isEditing = ref(false);
 const newToDoItem = ref({ title: '', description: '' });
 const selectedToDoItem = ref(null); // Pour l'édition
 const showOnlyPending = ref(false);
-const isLoading = ref(true); // Variable pour le chargement
+const isLoading = ref(true);
+const isEditingQuantity = ref(false);
 
 // Récupération des items de la ToDoList
 const fetchToDoItems = async () => {
@@ -105,10 +106,32 @@ const decrementQuantity = async (item) => {
 
 // Fonction pour mettre à jour la quantité dans la base de données
 const updateItemQuantityInDatabase = async (item) => {
+  console.log('Mise à jour de la quantité...', `/api/todolist/${route.params.id}/todoitem/${item.id}`);
     const response = await client.patch(`/api/todolist/${route.params.id}/todoitem/${item.id}`,  { quantity: item.quantity });
+    console.log('response', response);
     const index = toDoItems.value.findIndex(i => i.id === response.toDoItem.id);
     toDoItems.value[index].quantity = response.toDoItem.quantity;
     console.log('Quantité mise à jour avec succès');
+};
+
+// Fonction pour commencer l'édition de la quantité
+const editQuantity = (item) => {
+  selectedToDoItem.value = { ...item };
+  isEditingQuantity.value = true;
+};
+
+// Fonction pour sauvegarder la nouvelle quantité
+const saveQuantity = async (item) => {
+  if (!isEditingQuantity.value) return;
+  isEditingQuantity.value = false;
+  selectedToDoItem.value = null;
+  await updateItemQuantityInDatabase(item);
+};
+
+// Fonction pour annuler l'édition de la quantité
+const cancelEditQuantity = () => {
+  isEditingQuantity.value = false;
+  selectedToDoItem.value = null;
 };
 
 onMounted(fetchToDoItems);
@@ -190,8 +213,22 @@ onMounted(fetchToDoItems);
                 </svg>
               </button>
 
+<!--              <div class="border border-gray-300 dark:border-gray-600 px-4 py-1 rounded">-->
+<!--                {{ item.quantity }}-->
+<!--              </div>-->
               <div class="border border-gray-300 dark:border-gray-600 px-4 py-1 rounded">
-                {{ item.quantity }}
+                <!-- Si 'isEditingQuantity' est vrai pour cet item, on affiche un champ input -->
+                <input v-if="isEditingQuantity && selectedToDoItem.id === item.id"
+                       v-model="item.quantity"
+                       type="number"
+                       class="w-16 bg-transparent text-center border-none focus:outline-none"
+                       @blur="saveQuantity(item)"
+                       @keydown.enter="saveQuantity(item)"
+                       @keydown.esc="cancelEditQuantity(item)" />
+                <!-- Sinon on affiche simplement la quantité avec un événement click pour éditer -->
+                <span v-else @click="editQuantity(item)">
+                  {{ item.quantity }}
+                </span>
               </div>
 
               <button @click="incrementQuantity(item)" class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500">
