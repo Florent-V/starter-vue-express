@@ -23,7 +23,7 @@ const toggleButton = () => {
 
 <template>
   <div class="flex items-center">
-    <span class="mr-3 text-sm font-semibold text-gray-700">{{ label }}</span>
+    <span class="mr-3 text-sm font-semibold">{{ label }}</span>
     <div
         class="relative w-16 h-8 bg-gray-300 rounded-full p-1 cursor-pointer"
         :class="{ 'bg-green-500': state, 'bg-red-500': !state }"

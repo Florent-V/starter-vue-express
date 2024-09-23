@@ -89,12 +89,36 @@ const deleteToDoItem = async (item) => {
   toDoItems.value = toDoItems.value.filter(i => i.id !== item.id);
 };
 
+// Fonction pour incrémenter la quantité
+const incrementQuantity = async (item) => {
+  item.quantity += 1;
+  await updateItemQuantityInDatabase(item);
+};
+
+// Fonction pour décrémenter la quantité
+const decrementQuantity = async (item) => {
+  if (item.quantity > 1) {
+    item.quantity -= 1;
+    await updateItemQuantityInDatabase(item);
+  }
+};
+
+// Fonction pour mettre à jour la quantité dans la base de données
+const updateItemQuantityInDatabase = async (item) => {
+    const response = await client.patch(`/api/todolist/${route.params.id}/todoitem/${item.id}`,  { quantity: item.quantity });
+    const index = toDoItems.value.findIndex(i => i.id === response.toDoItem.id);
+    toDoItems.value[index].quantity = response.toDoItem.quantity;
+    console.log('Quantité mise à jour avec succès');
+};
+
 onMounted(fetchToDoItems);
 </script>
 
 <template>
+
   <div>
     <div class="container mx-auto pt-2 lg:pb-8">
+
       <h1 class="text-4xl font-bold my-4 text-center text-blue-800 dark:text-yellow-300">{{ toDoList.title }} :
         Détails</h1>
 
@@ -103,7 +127,6 @@ onMounted(fetchToDoItems);
             v-model:state="showOnlyPending"
             label="Uniquement non fait"
         />
-
         <div v-if="!isCreating" class="text-right">
           <button @click="openCreateForm" class="w-14 h-14 bg-blue-600 dark:bg-yellow-400 text-white rounded-full">
           <span class="items-center">
@@ -111,9 +134,7 @@ onMounted(fetchToDoItems);
         </span>
           </button>
         </div>
-
       </div>
-
 
 
       <!-- ToDoForm -->
@@ -139,43 +160,63 @@ onMounted(fetchToDoItems);
         <div v-if="toDoItems.length === 0" class="text-center text-gray-400 dark:text-gray-500 mt-8">
           Aucune tâche à afficher
         </div>
+
+        <ul v-else>
+          <li v-for="item in filteredToDoItems" :key="item.id"
+              class="flex gap-4 items-center bg-white dark:bg-gray-800 p-4 rounded-lg mb-2 shadow-lg dark:shadow-gray-700">
+
+            <button @click="toggleToDoItemDone(item)"
+                    class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500">
+              <i :class="{ 'fa-solid fa-check-square': item.done, 'fa-regular fa-square': !item.done }"></i>
+            </button>
+
+            <div v-if="isEditing && selectedToDoItem.id === item.id" class="flex-grow">
+              <ToDoItemFormComponent
+                  :initialData="selectedToDoItem"
+                  @submit="handleFormSubmit"
+                  @cancel="closeForm"
+              />
+            </div>
+
+            <div v-else class="flex-grow">
+              <span :class="{ 'line-through text-gray-400 dark:text-gray-500': item.done }">{{ item.title }}</span>
+            </div>
+
+            <!-- Section de quantité avec boutons + et - -->
+            <div class="flex items-center gap-2 mr-4">
+              <button @click="decrementQuantity(item)" class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500">
+                <svg class="w-6 h-6 text-blue-600 dark:text-yellow-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
+                </svg>
+              </button>
+
+              <div class="border border-gray-300 dark:border-gray-600 px-4 py-1 rounded">
+                {{ item.quantity }}
+              </div>
+
+              <button @click="incrementQuantity(item)" class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500">
+                <svg class="w-6 h-6 text-blue-600 dark:text-yellow-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Actions pour chaque item -->
+            <div class="flex items-center">
+              <button @click="openEditForm(item)"
+                      class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500 ml-2">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button @click="deleteToDoItem(item)"
+                      class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500 ml-2">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </li>
+        </ul>
       </div>
 
-      <ul v-else>
-        <li v-for="item in filteredToDoItems" :key="item.id"
-            class="flex gap-4 items-center bg-white dark:bg-gray-800 p-4 rounded-lg mb-2 shadow-lg dark:shadow-gray-700">
 
-          <button @click="toggleToDoItemDone(item)"
-                  class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500">
-            <i :class="{ 'fa-solid fa-check-square': item.done, 'fa-regular fa-square': !item.done }"></i>
-          </button>
-
-          <div v-if="isEditing && selectedToDoItem.id === item.id" class="flex-grow">
-            <ToDoItemFormComponent
-                :initialData="selectedToDoItem"
-                @submit="handleFormSubmit"
-                @cancel="closeForm"
-            />
-          </div>
-
-          <div v-else class="flex-grow">
-            <span :class="{ 'line-through text-gray-400 dark:text-gray-500': item.done }">{{ item.title }}</span>
-          </div>
-
-          <!-- Actions pour chaque item -->
-          <div class="flex items-center">
-
-            <button @click="openEditForm(item)"
-                    class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500 ml-2">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button @click="deleteToDoItem(item)"
-                    class="text-blue-600 dark:text-yellow-400 hover:text-blue-700 dark:hover:text-yellow-500 ml-2">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </div>
-        </li>
-      </ul>
     </div>
   </div>
 
