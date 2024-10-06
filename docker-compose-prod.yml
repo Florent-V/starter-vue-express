@@ -4,7 +4,7 @@ services:
 #########################################
   client:
     container_name: ${PROJECT_NAME}-client-${ENV_NAME}
-    #image: ${PROJECT_NAME}-vue-client
+    restart: unless-stopped
     build:
       context: ./client
       dockerfile: DockerFile
@@ -31,7 +31,6 @@ services:
 #########################################
   api:
     container_name: ${PROJECT_NAME}-app-${ENV_NAME}
-    #image: ${PROJECT_NAME}-node-mysql-app
     restart: unless-stopped
     build:
       context: ./server
@@ -56,7 +55,7 @@ services:
       - START_METHOD=${START_METHOD}
       - PRIVATE_KEY=${PRIVATE_KEY}
       - PUBLIC_KEY=${PUBLIC_KEY}
-      - CLIENT_ORIGIN=${CLIENT_ORIGIN}
+      - CLIENT_ORIGIN=${CLIENT_URL}
     networks:
       - internal
       - web
@@ -104,6 +103,8 @@ services:
 networks:
   internal:
     driver: bridge
+  web:
+    external: true
 
 volumes:
   mysql_data:
