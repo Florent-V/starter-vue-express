@@ -12,7 +12,7 @@ const updateDatabaseIndex = (entityName, modelName, modelFileName, indexPath) =>
     const insertionPoint = indexContent.indexOf('\n', lastImportIndex);
     indexContent = indexContent.slice(0, insertionPoint + 1) + importStatement + indexContent.slice(insertionPoint + 1);
   }
-  
+
   if (!indexContent.includes(dbAssignmentStatement)) {
     // Ajouter l'assignation à la fin des assignations db
     const dbEndIndex = indexContent.lastIndexOf('db.');

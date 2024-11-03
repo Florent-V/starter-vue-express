@@ -6,12 +6,11 @@ import InvalidTokenError from '../error/invalidTokenError.js';
 import ForbiddenError from '../error/forbiddenError.js';
 import ConflictError from '../error/conflictError.js';
 
-
 export const authenticateToken = (req, res, next) => {
   try {
     const token = req.header('Authorization')?.split(' ')[1];
     if (!token) throw new InvalidTokenError('Access Denied: No token provided');
-    
+
     const verified = authToken(token);
     req.user = verified;
     next();
@@ -22,16 +21,16 @@ export const authenticateToken = (req, res, next) => {
 
 export const authenticateByCookieSession = (req, res, next) => {
   // TODO Delete console.log in production
+  console.log('authenticateByCookieSession');
   console.log('req.cookies:', req.cookies);
   console.log('req.signedCookies:', req.signedCookies);
-  console.log('req.session:', req.session.token);
   try {
-    // TODO Delete auth by header in production use only cookie session
-    const token = req.session.token || req.header('Authorization')?.split(' ')[1];
+    // TODO Delete auth by header in production use only cookie
+    // const token = req.header('Authorization')?.split(' ')[1];
+    const token = req.signedCookies.access_token;
 
     if (!token) throw new InvalidTokenError('Access Denied: No token provided');
 
-  
     const verified = authToken(token);
     console.log('verified:', verified);
     req.user = verified;
@@ -57,7 +56,7 @@ export const isAdmin = async (req, res, next) => {
 
     const access = checkAccess(roles, ['admin']);
     if (access) return next();
-    
+
     throw new ForbiddenError('Require Admin Role!');
 
   } catch (error) {
@@ -108,8 +107,8 @@ export const checkDuplicateUsernameOrEmail = async (req, res, next) => {
 
     if (user) {
       throw new ConflictError(user.username === req.body.username
-        ? "Failed! Username is already in use!"
-        : "Failed! Email is already in use!");
+          ? "Failed! Username is already in use!"
+          : "Failed! Email is already in use!");
     }
 
     next();

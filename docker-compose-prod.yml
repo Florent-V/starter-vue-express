@@ -7,12 +7,16 @@ services:
     restart: unless-stopped
     build:
       context: ./client
-      dockerfile: DockerFile
+      dockerfile: prod.DockerFile
       args:
-        NODE_ENV: ${NODE_ENV}
+        VITE_API_BASE_URL: ${API_BASE_URL}
+        VITE_CLIENT_DOCKER_PORT: ${VITE_CLIENT_DOCKER_PORT}
+#    ports:
+#      - "${NGINX_CLIENT_PORT}:5050"
     environment:
       - NODE_ENV=${NODE_ENV}
       - VITE_API_BASE_URL=${API_BASE_URL}
+      - VITE_CLIENT_DOCKER_PORT=${VITE_CLIENT_DOCKER_PORT}
     networks:
       - web
       - internal
@@ -21,8 +25,9 @@ services:
       - client_node_modules:/usr/src/app/node_modules
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=web"
       - "traefik.http.routers.client.rule=Host(`${CLIENT_URL}`)"
-      - "traefik.http.services.client.loadbalancer.server.port=${VITE_CLIENT_DOCKER_PORT}"
+      - "traefik.http.services.client.loadbalancer.server.port=5050"
       - "traefik.http.routers.client.entrypoints=websecure"
       - "traefik.http.routers.client.tls.certresolver=${CERT_RESOLVER}"
 
@@ -38,6 +43,8 @@ services:
       args:
         NODE_ENV: ${NODE_ENV}
         START_METHOD: ${START_METHOD}
+#    ports:
+#      - "${NODE_API_PORT}:${NODE_API_DOCKER_PORT}"
     environment:
       - SERVICE_NAME=app
       - PROJECT_NAME=${PROJECT_NAME}
@@ -49,6 +56,7 @@ services:
       - COOKIE_SECRET=${COOKIE_SECRET}
       - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
       - ACCESS_TOKEN_LIFETIME=${ACCESS_TOKEN_LIFETIME}
+      - ACCESS_TOKEN_COOKIE_LIFETIME=${ACCESS_TOKEN_COOKIE_LIFETIME}
       - REFRESH_TOKEN_LIFETIME=${REFRESH_TOKEN_LIFETIME}
       - SESSION_COOKIE_LIFETIME=${SESSION_COOKIE_LIFETIME}
       - REFRESH_TOKEN_COOKIE_LIFETIME=${REFRESH_TOKEN_COOKIE_LIFETIME}
@@ -56,6 +64,7 @@ services:
       - PRIVATE_KEY=${PRIVATE_KEY}
       - PUBLIC_KEY=${PUBLIC_KEY}
       - CLIENT_ORIGIN=${CLIENT_URL}
+      - NODE_API_DOCKER_PORT=${NODE_API_DOCKER_PORT}
     networks:
       - internal
       - web
@@ -68,7 +77,8 @@ services:
       -  api_node_modules:/usr/src/app/node_modules
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`${API_BASE_URL}`)"
+      - "traefik.docker.network=web"
+      - "traefik.http.routers.api.rule=Host(`${API_BASE_URL}`) && PathPrefix(`/api`)"
       - "traefik.http.services.api.loadbalancer.server.port=${NODE_API_DOCKER_PORT}"
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls.certresolver=${CERT_RESOLVER}"

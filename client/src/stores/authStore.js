@@ -21,8 +21,8 @@ export const useAuthStore = defineStore('auth', {
       try {
         console.log('Tentative de connexion...');
         const data = await client.post(
-          '/api/auth/signin',
-          { email, password }
+            '/api/auth/signin',
+            { email, password }
         );
         console.log('Connexion réussie:', data);
         localStorage.setItem('user', JSON.stringify(data));
@@ -38,8 +38,8 @@ export const useAuthStore = defineStore('auth', {
       try {
         console.log('Tentative d\'inscription...');
         const data = await client.post(
-          '/api/auth/signup',
-          signupForm
+            '/api/auth/signup',
+            signupForm
         );
         console.log('Inscription réussie:', data);
         return data;
@@ -65,6 +65,7 @@ export const useAuthStore = defineStore('auth', {
         console.log('refreshToken() - Tentative de rafraîchissement du token...');
         const data = await client.post('/api/auth/refresh-token', {});
         console.log('refreshToken() - Token rafraîchi:', data);
+        return data;
       } catch (error) {
         console.error('refreshToken() - Erreur lors du rafraîchissement du token:');
         throw error;
