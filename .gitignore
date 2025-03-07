@@ -1,7 +1,7 @@
 server/node_modules/
 client/node_modules/
-
-
+client/dev-dist/
+client/dist/
 .idea/
 .vscode/
 package-lock.json
