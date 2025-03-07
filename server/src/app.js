@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 
 import initDB from './database/init.js';
 import  { errorHandler, notFound, logError } from './middleware/errorMiddleware.js';
-import { init, send, setRouteFound } from './middleware/inOutMiddleware.js';
+import { init, send, setRouteFound, start, end } from './middleware/inOutMiddleware.js';
 import { adminRouter } from './admin/admin.js';
 
 import testRoutes from './routes/testRoutes.js';
@@ -41,6 +41,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use('/api/uploads', express.static('public/uploads'));
 
 // Middlewares
+app.use(start);
 app.use(init);
 // Test Routes
 app.use('', testRoutes);
@@ -57,8 +58,11 @@ app.use('/api/todolist', setRouteFound, toDoListRoutes);
 app.use('/api/feature', setRouteFound, featureRoutes);
 // Features Routes
 app.use('/api/testimonial', setRouteFound, testimonialRoutes);
+// End Middleware
+app.use(end);
 // Send middleware
 app.use(send);
+
 
 // Error handling middleware
 app.use(logError);

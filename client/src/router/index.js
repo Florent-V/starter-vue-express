@@ -12,6 +12,8 @@ import TestView from '@/views/Demo/TestView.vue'
 import Forbidden from "@/views/Forbidden.vue";
 import SaasHomeView from "@/views/SaasHomeView.vue";
 import SaasPlanView from "@/views/SaasPlanView.vue";
+import WelcomeComponent from "@/components/WelcomeComponent.vue";
+import WelcomeView from "@/views/WelcomeView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -23,16 +25,7 @@ const router = createRouter({
         title: 'Welcome',
         description: 'This is the home page'
       },
-      component: SaasHomeView
-    },
-    {
-      path: '/plans',
-      name: 'plans',
-      meta: {
-        title: 'Saas Plan',
-        description: 'This is the Plan Saas page'
-      },
-      component: SaasPlanView
+      component: WelcomeView
     },
     {
       path: '/home',

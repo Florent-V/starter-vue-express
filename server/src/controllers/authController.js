@@ -5,7 +5,7 @@ import RefreshTokenError from '../error/refreshTokenError.js';
 import config from '../config/config.js';
 import { authenticateUser } from '../services/authService.js';
 import { createAuthTokens, storeRefreshToken, validateRefreshToken, rotateRefreshToken, authToken, decodeToken } from '../services/tokenService.js';
-import InvalidTokenError from "../error/invalidTokenError.js";
+import BadRequestError from "../error/badRequestError.js";
 
 // Options des cookies
 const refreshTokensCookieOptions = {
@@ -106,7 +106,7 @@ export const handleRefreshToken = async (req, res, next) => {
   }
 }
 
-export const logout = async (req, res) => {
+export const logout = async (req, res, next) => {
   try {
     res.clearCookie('refresh_token', {
       httpOnly: true,
@@ -123,7 +123,7 @@ export const logout = async (req, res) => {
     });
 
     const token = req.signedCookies.access_token;
-    if (!token) throw new InvalidTokenError('Access Denied: No token provided');
+    if (!token) throw new BadRequestError('No token provided for logout');
 
     const decoded = decodeToken(token);
     console.log('decoded:', decoded);
@@ -133,6 +133,6 @@ export const logout = async (req, res) => {
       message: "You've been signed out successfully!"
     });
   } catch (error) {
-    console.log('error', error);
+    return next(error);
   }
 };
