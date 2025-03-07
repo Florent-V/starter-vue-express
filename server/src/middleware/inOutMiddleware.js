@@ -3,6 +3,11 @@ export const init = (req, res, next) => {
   next();
 }
 
+export const setRouteFound = (req, res, next) => {
+  res.routeFound = true;
+  next();
+};
+
 export const send = (req, res) => {
   if (Object.keys(res.data).length > 0) {
     res.status(res.statusCode || 200).json(res.data);

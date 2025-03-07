@@ -4,13 +4,14 @@ import demoRoutes from "@/router/demoRoutes.js";
 import authRoutes from "@/router/authRoutes.js";
 import productRoutes from "@/router/productRoutes.js";
 import toDoListRoutes from "@/router/toDoListRoutes.js";
-import WelcomeView from '../views/WelcomeView.vue'
 import HomeView from "@/views/HomeView.vue";
 import AboutView from '@/views/AboutView.vue'
 import HelloView from '@/views/HelloView.vue'
 import NotFound from '@/views/NotFound.vue'
 import TestView from '@/views/Demo/TestView.vue'
 import Forbidden from "@/views/Forbidden.vue";
+import SaasHomeView from "@/views/SaasHomeView.vue";
+import SaasPlanView from "@/views/SaasPlanView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -22,7 +23,16 @@ const router = createRouter({
         title: 'Welcome',
         description: 'This is the home page'
       },
-      component: WelcomeView
+      component: SaasHomeView
+    },
+    {
+      path: '/plans',
+      name: 'plans',
+      meta: {
+        title: 'Saas Plan',
+        description: 'This is the Plan Saas page'
+      },
+      component: SaasPlanView
     },
     {
       path: '/home',

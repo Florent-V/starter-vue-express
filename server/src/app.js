@@ -5,13 +5,17 @@ import cookieParser from 'cookie-parser';
 
 import initDB from './database/init.js';
 import  { errorHandler, notFound, logError } from './middleware/errorMiddleware.js';
-import { init, send } from './middleware/inOutMiddleware.js';
+import { init, send, setRouteFound } from './middleware/inOutMiddleware.js';
+import { adminRouter } from './admin/admin.js';
 
 import testRoutes from './routes/testRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import toDoListRoutes from './routes/toDoListRoutes.js';
+import featureRoutes from "./routes/featureRoutes.js";
+import testimonialRoutes from "./routes/testimonialRoutes.js";
+import { authenticateByCookieSession } from "./middleware/authMiddleware.js";
 
 dotenv.config();
 const app = express();
@@ -40,14 +44,19 @@ app.use('/api/uploads', express.static('public/uploads'));
 app.use(init);
 // Test Routes
 app.use('', testRoutes);
+app.use('/admin-panel', setRouteFound, authenticateByCookieSession, adminRouter);
 // Auth Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', setRouteFound, authRoutes);
 // User Routes
-app.use('/api/user', userRoutes);
+app.use('/api/user', setRouteFound, userRoutes);
 // Tutorial Routes
-app.use('/api/product', productRoutes);
+app.use('/api/product', setRouteFound, productRoutes);
 // ToDoList && ToDoItem Routes
-app.use('/api/todolist', toDoListRoutes);
+app.use('/api/todolist', setRouteFound, toDoListRoutes);
+// Features Routes
+app.use('/api/feature', setRouteFound, featureRoutes);
+// Features Routes
+app.use('/api/testimonial', setRouteFound, testimonialRoutes);
 // Send middleware
 app.use(send);
 
@@ -62,6 +71,7 @@ app.listen(port, async () => {
     // Replace true by false when sync isn't needed
     // Replace force by alter to keep data
     await initDB(false, 'alter');
+    // await initDB(true, 'force');
     console.log(`Server is running on port ${port}`);
   } catch (error) {
     console.error('Unable to connect to the database:', error);

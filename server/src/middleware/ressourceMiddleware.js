@@ -3,6 +3,15 @@ import ForbiddenError from '../error/forbiddenError.js';
 import BadRequestError from '../error/badRequestError.js';
 import { lowercaseFirstLetter } from '../services/stringService.js';
 
+export const getRessources = async (req, res, next) => {
+  try {
+    console.log('req.entity', req.entity);
+    res.data[lowercaseFirstLetter(req.entity.options.name.plural)] = await req.entity.findAll();
+    next();
+  } catch (error) {
+    return next(error);
+  }
+};
 export const getUserRessources = async (req, res, next) => {
   try {
     const userId = req.user.id;

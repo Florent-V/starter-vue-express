@@ -1,34 +1,48 @@
 import sequelize from './connect.js';
 import models from '../models/index.js';
-const { role, user, product, toDoList, toDoItem, label } = models;
 
 export const seedDatabase = async () => {
   try {
     await sequelize.sync({ force: true });
 
-    const roles = await role.bulkCreate([
-      { name: 'user' },
-      { name: 'moderator' },
-      { name: 'admin' },
-    ]);
+    // Roles
+    const adminRole = await models.role.create({ name: 'Admin' });
+    const developperRole = await models.role.create({ name: 'Developper' });
+    const clientRole = await models.role.create({ name: 'Client' });
 
-    const users = await user.bulkCreate([
+    // Permissions
+    const manageProjectsPermission = await models.permission.create({ name: 'Manage Projects' });
+    const trackTimePermission = await models.permission.create({ name: 'Track Time' });
+    const invoicePermission = await models.permission.create({ name: 'Create Invoices' });
+    const viewReportsPermission = await models.permission.create({ name: 'View Reports' })
+
+    // Assign Permissions to Roles
+    await adminRole.addPermissions([manageProjectsPermission, trackTimePermission, invoicePermission, viewReportsPermission]);
+    await developperRole.addPermissions([manageProjectsPermission, trackTimePermission, invoicePermission]);
+    await clientRole.addPermission(viewReportsPermission);
+
+    // Plans
+    const freePlan = await models.plan.create({ name: 'Free', price: 0 });
+    const proPlan = await models.plan.create({ name: 'Pro', price: 19.99 });
+    const teamPlan = await models.plan.create({ name: 'Team', price: 49.99 });
+
+    const users = await models.user.bulkCreate([
       {
-        username: 'userUser',
+        username: 'client',
         firstName: 'Alice',
         lastName: 'Smith',
-        email: 'user@mail.com',
+        email: 'client@mail.com',
         password: '$2a$10$KH1D8E6BfPJFsoxBJYA5TuVItCzipAxI52JiRl0gKLKCgMOsjM.6q',
       },
       {
-        username: 'userModerator',
+        username: 'developper',
         firstName: 'Bob',
         lastName: 'Johnson',
-        email: 'moderator@mail.com',
+        email: 'developper@mail.com',
         password: '$2a$10$KH1D8E6BfPJFsoxBJYA5TuVItCzipAxI52JiRl0gKLKCgMOsjM.6q',
       },
       {
-        username: 'userAdmin',
+        username: 'admin',
         firstName: 'Charlie',
         lastName: 'Brown',
         email: 'admin@mail.com',
@@ -36,12 +50,45 @@ export const seedDatabase = async () => {
       },
     ]);
 
-    await users[0].addRole(roles[0]);
-    await users[1].addRole(roles[1]);
-    await users[2].addRole(roles[1]);
-    await users[2].addRole(roles[2]);
+    await users[0].addRole(clientRole);
+    await users[1].addRoles(developperRole);
+    await users[2].addRoles(adminRole);
 
-    const products = await product.bulkCreate([
+    // Features
+    const projectManagementFeature = await models.feature.create({ name: 'Project Management', description: 'Create and manage projects' });
+    const timeTrackingFeature = await models.feature.create({ name: 'Time Tracking', description: 'Track time spent on tasks' });
+    const invoicingFeature = await models.feature.create({ name: 'Invoicing', description: 'Generate and send invoices' });
+    const collaborationFeature = await models.feature.create({ name: 'Collaboration', description: 'Invite clients and freelancers' });
+    const reportingFeature = await models.feature.create({ name: 'Reporting', description: 'View detailed reports and analytics' });
+
+    // Assign Features to Plans
+    await freePlan.addFeatures([projectManagementFeature, timeTrackingFeature]);
+    await proPlan.addFeatures([projectManagementFeature, timeTrackingFeature, invoicingFeature]);
+    await teamPlan.addFeatures([projectManagementFeature, timeTrackingFeature, invoicingFeature, collaborationFeature, reportingFeature]);
+
+    // Subscriptions
+    await models.subscription.create({ start_date: new Date(), status: 'Active', plan_id: freePlan.id, userId: users[0].id });
+    await models.subscription.create({ start_date: new Date(), status: 'Active', plan_id: proPlan.id, userId: users[1].id });
+
+    // Payments
+    await models.payment.create({ amount: 19.99, payment_date: new Date(), status: 'Success', subscription_id: 2 });
+
+    await models.testimonial.bulkCreate([
+      {
+        content: "Cette plateforme a transformé ma façon de gérer mes projets. Je recommande vivement !",
+        author: "Alice D.",
+      },
+      {
+        content: "Grâce à cette application, je peux me concentrer sur ce que je fais de mieux : créer.",
+        author: "Bob F.",
+      },
+      {
+        content: "L'outil de suivi du temps est incroyablement précis et facile à utiliser.",
+        author: "Charlie L.",
+      }
+    ]);
+
+    await models.product.bulkCreate([
       {
         name: 'Product 1',
         price: 10.99,
@@ -104,7 +151,7 @@ export const seedDatabase = async () => {
       }
     ]);
 
-    const labels = await label.bulkCreate([
+    const labels = await models.label.bulkCreate([
         {
             name: 'low',
         },
@@ -117,7 +164,7 @@ export const seedDatabase = async () => {
     ]);
 
 
-    const toDoLists = await toDoList.bulkCreate([
+    const toDoLists = await models.toDoList.bulkCreate([
         {
             title: 'To Do List 1',
             description: 'Description of To Do List 1',
@@ -151,7 +198,7 @@ export const seedDatabase = async () => {
     ]);
     console.log('toDoLists', toDoLists.length);
 
-    const toDoItems = await toDoItem.bulkCreate([
+    const toDoItems = await models.toDoItem.bulkCreate([
         {
             title: 'To Do Item 1',
             description: 'Description of To Do Item 1',

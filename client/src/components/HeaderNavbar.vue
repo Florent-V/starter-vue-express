@@ -5,14 +5,6 @@ import { useAuthStore } from '@/stores/authStore';
 
 const userStore = useAuthStore();
 const user = computed(() => userStore.user);
-// Simulated user object, replace with your actual user management logic
-// const user = ref({
-//   firstName: 'John',
-//   lastName: 'Doe',
-//   email: 'john.doe@example.com',
-//   photoUrl: 'https://via.placeholder.com/150'
-// })
-//const user = ref(null)
 
 const isMobileMenuOpen = ref(false)
 const isResourcesDropdownOpen = ref(false)

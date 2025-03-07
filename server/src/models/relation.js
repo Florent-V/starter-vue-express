@@ -55,5 +55,44 @@ export const defineAssociations = () => {
     onDelete: 'CASCADE'
   });
 
+  models.role.belongsToMany(models.permission, {
+    through: 'role_permission',
+    foreignKey: 'roleId',
+    otherKey: 'permissionId'
+  });
 
+  models.permission.belongsToMany(models.role, {
+    through: 'role_permission',
+    foreignKey: 'permissionId',
+    otherKey: 'roleId'
+  });
+
+  models.plan.belongsToMany(models.feature, {
+    through: 'plan_feature',
+    foreignKey: 'planId',
+    otherKey: 'featureId'
+  });
+  models.feature.belongsToMany(models.plan, {
+    through: 'plan_feature',
+    foreignKey: 'featureId',
+    otherKey: 'planId'
+  });
+
+  models.subscription.belongsTo(models.plan, {
+    foreignKey: 'planId',
+    onDelete: 'CASCADE'
+  });
+
+  models.plan.hasMany(models.subscription, {
+    foreignKey: 'planId',
+  });
+
+  models.payment.belongsTo(models.subscription, {
+    foreignKey: 'subscriptionId',
+    onDelete: 'CASCADE'
+  });
+
+  models.subscription.hasMany(models.payment, {
+    foreignKey: 'subscriptionId',
+  });
 };

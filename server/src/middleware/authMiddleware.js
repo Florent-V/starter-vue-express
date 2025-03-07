@@ -64,36 +64,6 @@ export const isAdmin = async (req, res, next) => {
   }
 };
 
-export const isModerator = async (req, res, next) => {
-  try {
-    if (!req.user) throw new ForbiddenError('Require Admin Role!');
-    const user = await User.findByPk(req.user.id);
-    const roles = await user.getRoles();
-
-    const access = checkAccess(roles, ['moderator']);
-    if (access) return next();
-
-    throw new ForbiddenError('Require Moderator Role!');
-  } catch (error) {
-    return next(error);
-  }
-};
-
-export const isModeratorOrAdmin = async (req, res, next) => {
-  try {
-    if (!req.user) throw new ForbiddenError('Require Admin Role!');
-    const user = await User.findByPk(req.user.ifd);
-    const roles = await user.getRoles();
-
-    const access = checkAccess(roles, ['moderator', 'admin']);
-    if (access) return next();
-
-    throw new ForbiddenError('Require Moderator or Admin Role!');
-  } catch (error) {
-    return next(error);
-  }
-};
-
 export const checkDuplicateUsernameOrEmail = async (req, res, next) => {
   try {
     const user = await User.findOne({
