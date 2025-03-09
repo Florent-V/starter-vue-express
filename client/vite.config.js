@@ -19,6 +19,7 @@ export default defineConfig({
     nightwatchPlugin(),
     vueDevTools(),
     VitePWA({
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       registerType: 'prompt',
       injectRegister: 'auto',
 
@@ -28,10 +29,34 @@ export default defineConfig({
       },
 
       manifest: {
-        name: 'vue-pwa',
-        short_name: 'vue-pwa',
-        description: 'test pwa',
-        theme_color: '#f0f0f0',
+        name: 'Vue-PWA starter',
+        short_name: 'vue-pwa-starter',
+        description: 'A Vue 3 PWA starter template',
+        theme_color: '#1C1836',
+        icons: [
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ]
       },
 
       workbox: {
