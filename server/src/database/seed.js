@@ -7,38 +7,21 @@ export const seedDatabase = async () => {
 
     // Roles
     const adminRole = await models.role.create({ name: 'Admin' });
-    const developperRole = await models.role.create({ name: 'Developper' });
-    const clientRole = await models.role.create({ name: 'Client' });
-
-    // Permissions
-    const manageProjectsPermission = await models.permission.create({ name: 'Manage Projects' });
-    const trackTimePermission = await models.permission.create({ name: 'Track Time' });
-    const invoicePermission = await models.permission.create({ name: 'Create Invoices' });
-    const viewReportsPermission = await models.permission.create({ name: 'View Reports' })
-
-    // Assign Permissions to Roles
-    await adminRole.addPermissions([manageProjectsPermission, trackTimePermission, invoicePermission, viewReportsPermission]);
-    await developperRole.addPermissions([manageProjectsPermission, trackTimePermission, invoicePermission]);
-    await clientRole.addPermission(viewReportsPermission);
-
-    // Plans
-    const freePlan = await models.plan.create({ name: 'Free', price: 0 });
-    const proPlan = await models.plan.create({ name: 'Pro', price: 19.99 });
-    const teamPlan = await models.plan.create({ name: 'Team', price: 49.99 });
+    const userRole = await models.role.create({ name: 'User' });
 
     const users = await models.user.bulkCreate([
       {
-        username: 'client',
+        username: 'user1',
         firstName: 'Alice',
         lastName: 'Smith',
-        email: 'client@mail.com',
+        email: 'user1@mail.com',
         password: '$2a$10$KH1D8E6BfPJFsoxBJYA5TuVItCzipAxI52JiRl0gKLKCgMOsjM.6q',
       },
       {
-        username: 'developper',
+        username: 'user2',
         firstName: 'Bob',
         lastName: 'Johnson',
-        email: 'developper@mail.com',
+        email: 'user2@mail.com',
         password: '$2a$10$KH1D8E6BfPJFsoxBJYA5TuVItCzipAxI52JiRl0gKLKCgMOsjM.6q',
       },
       {
@@ -50,43 +33,9 @@ export const seedDatabase = async () => {
       },
     ]);
 
-    await users[0].addRole(clientRole);
-    await users[1].addRoles(developperRole);
-    await users[2].addRoles(adminRole);
-
-    // Features
-    const projectManagementFeature = await models.feature.create({ name: 'Project Management', description: 'Create and manage projects' });
-    const timeTrackingFeature = await models.feature.create({ name: 'Time Tracking', description: 'Track time spent on tasks' });
-    const invoicingFeature = await models.feature.create({ name: 'Invoicing', description: 'Generate and send invoices' });
-    const collaborationFeature = await models.feature.create({ name: 'Collaboration', description: 'Invite clients and freelancers' });
-    const reportingFeature = await models.feature.create({ name: 'Reporting', description: 'View detailed reports and analytics' });
-
-    // Assign Features to Plans
-    await freePlan.addFeatures([projectManagementFeature, timeTrackingFeature]);
-    await proPlan.addFeatures([projectManagementFeature, timeTrackingFeature, invoicingFeature]);
-    await teamPlan.addFeatures([projectManagementFeature, timeTrackingFeature, invoicingFeature, collaborationFeature, reportingFeature]);
-
-    // Subscriptions
-    await models.subscription.create({ start_date: new Date(), status: 'Active', plan_id: freePlan.id, userId: users[0].id });
-    await models.subscription.create({ start_date: new Date(), status: 'Active', plan_id: proPlan.id, userId: users[1].id });
-
-    // Payments
-    await models.payment.create({ amount: 19.99, payment_date: new Date(), status: 'Success', subscription_id: 2 });
-
-    await models.testimonial.bulkCreate([
-      {
-        content: "Cette plateforme a transformé ma façon de gérer mes projets. Je recommande vivement !",
-        author: "Alice D.",
-      },
-      {
-        content: "Grâce à cette application, je peux me concentrer sur ce que je fais de mieux : créer.",
-        author: "Bob F.",
-      },
-      {
-        content: "L'outil de suivi du temps est incroyablement précis et facile à utiliser.",
-        author: "Charlie L.",
-      }
-    ]);
+    await users[0].addRole(userRole);
+    await users[1].addRole(userRole);
+    await users[2].addRole(adminRole);
 
     await models.product.bulkCreate([
       {
@@ -260,8 +209,6 @@ export const seedDatabase = async () => {
             toDoListId: toDoLists[5].id,
       }
     ]);
-
-
 
     console.log('Données de test créées avec succès !');
   } catch (error) {

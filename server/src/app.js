@@ -13,8 +13,6 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import toDoListRoutes from './routes/toDoListRoutes.js';
-import featureRoutes from "./routes/featureRoutes.js";
-import testimonialRoutes from "./routes/testimonialRoutes.js";
 import { authenticateByCookieSession } from "./middleware/authMiddleware.js";
 
 dotenv.config();
@@ -54,15 +52,10 @@ app.use('/api/user', setRouteFound, userRoutes);
 app.use('/api/product', setRouteFound, productRoutes);
 // ToDoList && ToDoItem Routes
 app.use('/api/todolist', setRouteFound, toDoListRoutes);
-// Features Routes
-app.use('/api/feature', setRouteFound, featureRoutes);
-// Features Routes
-app.use('/api/testimonial', setRouteFound, testimonialRoutes);
 // End Middleware
 app.use(end);
 // Send middleware
 app.use(send);
-
 
 // Error handling middleware
 app.use(logError);
