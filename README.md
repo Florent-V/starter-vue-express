@@ -1,5 +1,5 @@
 <h1 align="center"><a href="https://github.com/ElanYoung/vite-vue-js-starter-template" target="_blank">
-🚀 Express - MYSQL - Vue 3  Starter  🚀
+🚀 Starter Node/express - Vue3 - Vite - PWA  🚀
 </a></h1>
 
 <p align="center">
@@ -29,8 +29,9 @@
   </a>
 </p>
 
-This template should help get you started developing a full stack app with Vue 3 in Vite and Express with MySQL.
+This template should help get you started developing a full stack app with Vue 3 in Vite with Tailwind and Express with MySQL.
 It comes pre-configured with several essential dependencies that will help you get started with your Vue3 project right away.
+This is a PWA template, so you can install it on your phone or computer.
 All is dockerized and ready to use.
 
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
@@ -47,7 +48,6 @@ All is dockerized and ready to use.
 ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
 ![WebStorm](https://img.shields.io/badge/webstorm-143?style=for-the-badge&logo=webstorm&logoColor=white&color=black)
 
-
 <!-- TOC -->
 * [Front - VueJS](#front---vuejs)
   * [Overview](#overview)
@@ -59,12 +59,12 @@ All is dockerized and ready to use.
 * [Back - Express](#back---express)
   * [Overview](#overview-1)
     * [Features](#features-1)
-    * [API Endpoints](#api-endpoints)
+  * [AdminJS](#adminjs)
+* [TODO](#todo)
 * [Installation](#installation)
   * [How To Setup](#how-to-setup)
   * [Configuration .env](#configuration-env)
   * [Checklist](#checklist)
-* [TODO](#todo)
   * [Docker](#docker)
     * [Start the containers](#start-the-containers)
     * [Stop the containers](#stop-the-containers)
@@ -101,9 +101,12 @@ All is dockerized and ready to use.
 + Signin/Signup Page
 + Handle user with pinia
 + Local crud with pinia
-+ DB crud with axios
++ Decentralized API request management in a utility
++ DB crud with axios : product and todolist exemples
++ Handle erros in request
 + Responsive Design
 + Dark Mode
++ PWA
 
 ### Testing
 
@@ -132,56 +135,21 @@ All is dockerized and ready to use.
 + Refresh Token
 + Cookie Session
 
-### API Endpoints
+## AdminJS
 
-All routes are prefixed by `/api`.
+You can access the AdminJS interface at http://localhost:${API_PORT}/admin-panel to manage your database.
+For now it just a basic implementation to facilitate the development.
+But with a little work you can add more features to use it in production.
+Be carefull access to admin-panel is not protected by JWT token.
+You will have to desactivate it in product or implement a middleware to protect it.
 
----
-**Authentification**
-- POST /signup
-- POST /signin
-- POST /logout
----
-**User**
-All following routes are protected by JWT token. You need to be authenticated to access them.
-- GET /user  `Get all users (only for admin or moderator)`
-- GET /user/me
-- GET /user/{:id} `Get a user by id (only for admin)`
-- PATCH /user/{:id} `Edit a user by id (only for admin)`
-- POST /user/{:userId}/role/{:roleId} `Add a role to a user (only for admin)`
-- DELETE /user/{:id} `Delete a user by id (only for admin)`
-- DELETE /user/{:userId}/role/{:roleId} `Delete a role to a user (only for admin)`
----
-**Product**
-All following routes are protected by JWT token. You need to be authenticated to access them.
-Product are linked to a user. Only the user who created the product can get, edit or delete it.
-- GET /product `Get all user's products`
-- GET /product/all `Get all products (only for admin)`
-- POST /product
-- GET /product/{:id} `Get a product by id(only for the user who created it)`
-- PATCH /product/edit/{:id} `Edit a product by id(only for the user who created it)`
-- POST /product/{:id} `Delete a product by id(only for the user who created it)`
-- DELETE /product/{:id} `Delete a product by id(only for the user who created it)`
----
-**ToDoList and ToDoItem**
-All following routes are protected by JWT token. You need to be authenticated to access them.
-Product are linked to a user. Only the user who created the product can get, edit or delete it.
-- GET /todolist `Get all user's todolists`
-- GET /todolist/all `Get all todolists (only for admin)`
-- POST /todolist `Create a todolist`
-- GET /todolist/{:id} `Get a todolist by id(only for the user who created it)`
-- PATCH /todolist/{:id} `Edit a todolist by id(only for the user who created it)`
-- DELETE /todolist/{:id} `Delete a todolist by id(only for the user who created it)`
-- POST /todolist/{:id}/todoitem `Create a todoitem in a todolist`
-- GET /todolist/{:id}/todoitem `Get all todoitems in a todolist`
-- GET /todolist/{:id}/todoitem/{:itemId} `Get a todoitem by id in a todolist`
-- PATCH /todolist/{:id}/todoitem/{:itemId} `Edit a todoitem by id in a todolist`
-- DELETE /todolist/{:id}/todoitem/{:itemId} `Delete a todoitem by id in a todolist`
+# TODO
 
-I've made a script to generate a crud for a new entity. You can use it with :
-- `npm run generate-crud -- EntityName`
-Be careful, this feature is still in development and some modifications may be needed.
-
+- Intégrer des messages d'erreurs plus explicites dans les formulaires
+- Ajouter des tests unitaires
+- Valider les formulaires côté front
+- critère validation mot de passe
+- service toast message
 
 # Installation
 
@@ -226,15 +194,6 @@ When you use this template, try follow the checklist to update your info properl
 - [ ] Change the favicon in `public`
 - [ ] Remove the `.github` folder which contains the funding info
 - [ ] Clean up the READMEs and remove routes
-
-
-# TODO
-
-- Intégrer des messages d'erreurs plus explicites dans les formulaires
-- Ajouter des tests unitaires
-- Valider les formulaires côté front
-- critère validation mot de passe
-- service toast message
 
 ## Docker
 
@@ -335,12 +294,3 @@ Les contributions sont les bienvenues ! Veuillez suivre les étapes suivantes po
 ## License
 
 Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
-
-
-
-
-Lorsque le conteneur MySQL démarrera, il exécutera automatiquement tous les scripts .sql présents dans le dossier /docker-entrypoint-initdb.d (qui correspond à votre dossier sql local) lors de la première initialisation de la base de données.
-
-Quelques points importants à noter :
-
-Cette méthode n'exécutera les scripts que lors de la première initialisation de la base de données. Si vous modifiez le script SQL et que vous voulez le réexécuter, vous devrez supprimer le volume de données MySQL et le recréer :
